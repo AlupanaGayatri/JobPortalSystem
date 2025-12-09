@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Preview</title>
+    <link rel="stylesheet" th:href="@{/css/resume.css}">
+</head>
+
+<body>
+
+<div class="resume-container">
+
+    <div class="resume-card">
+
+        <h1 th:text="${user.fullName}"></h1>
+        <p class="email" th:text="${user.email}"></p>
+        <p class="phone" th:text="${profile.phone}"></p>
+
+        <hr>
+
+        <h2>Professional Summary</h2>
+        <p th:text="${profile.summary}"></p>
+
+        <h2>Education</h2>
+        <ul>
+            <li th:each="edu : ${education}">
+                <strong th:text="${edu.degree}"></strong>,
+                <span th:text="${edu.institution}"></span> —
+                <span th:text="${edu.year}"></span>
+            </li>
+        </ul>
+
+        <h2>Experience</h2>
+        <ul>
+            <li th:each="exp : ${experience}">
+                <strong th:text="${exp.role}"></strong> at
+                <span th:text="${exp.company}"></span>
+                <p th:text="${exp.description}"></p>
+            </li>
+        </ul>
+
+        <h2>Skills</h2>
+        <p>
+            <span th:each="s : ${skills}" th:text="${s.name}" class="skill"></span>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

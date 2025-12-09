@@ -1,0 +1,162 @@
+:root {
+    /* Default: Chocolate Truffle Palette */
+    --primary: #38240D;
+    /* Dark Chocolate */
+    --primary-hover: #533513;
+    --accent: #C05800;
+    /* Caramel */
+    --accent-hover: #984400;
+    --text-dark: #38240D;
+    --text-body: #4A3B32;
+    --text-gray: #8C7B70;
+    --bg-light: #FDFBD4;
+    /* Cream */
+    --bg-white: #FFFFFF;
+    --border-color: #D1C7BD;
+
+    /* Functional Colors */
+    --success: #2E7D32;
+    --error: #D32F2F;
+    --warning: #ED6C02;
+    --info: #0288D1;
+}
+
+/* Theme: Ocean Breeze */
+[data-theme="ocean"] {
+    --primary: #0F5156;
+    /* Deep Teal */
+    --primary-hover: #134E4A;
+    --accent: #0ea5e9;
+    /* Sky Blue */
+    --accent-hover: #0284c7;
+    --text-dark: #0f172a;
+    --text-body: #334155;
+    --text-gray: #64748b;
+    --bg-light: #ecfeff;
+    /* Light Cyan */
+    --bg-white: #ffffff;
+    --border-color: #cbd5e1;
+}
+
+/* Theme: Sunset Gold */
+[data-theme="sunset"] {
+    --primary: #7c2d12;
+    /* Burnt Orange */
+    --primary-hover: #431407;
+    --accent: #f59e0b;
+    /* Amber */
+    --accent-hover: #d97706;
+    --text-dark: #451a03;
+    --text-body: #57534e;
+    --text-gray: #78716c;
+    --bg-light: #fff7ed;
+    /* Warm Orange Tint */
+    --bg-white: #ffffff;
+    --border-color: #e7e5e4;
+}
+
+/* Theme: Midnight Violet (Dark Mode) */
+[data-theme="midnight"] {
+    --primary: #1e1b4b;
+    /* Deep Indigo */
+    --primary-hover: #312e81;
+    --accent: #818cf8;
+    /* Soft Purple */
+    --accent-hover: #6366f1;
+    --text-dark: #f8fafc;
+    --text-body: #e2e8f0;
+    --text-gray: #94a3b8;
+    --bg-light: #0f172a;
+    /* Dark Slate */
+    --bg-white: #1e293b;
+    /* Slightly Lighter Dark */
+    --border-color: #334155;
+    --bg-white-rgb: 30, 41, 59;
+}
+
+/* Theme: Berry Blast */
+[data-theme="berry"] {
+    --primary: #831843;
+    /* Dark Pink/Red */
+    --primary-hover: #500724;
+    --accent: #db2777;
+    /* Bright Pink */
+    --accent-hover: #be185d;
+    --text-dark: #4a044e;
+    --text-body: #701a75;
+    --text-gray: #a21caf;
+    --bg-light: #fdf2f8;
+    /* Very Light Pink */
+    --bg-white: #ffffff;
+    --border-color: #fbcfe8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-body);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+/* Common Components */
+.btn-primary {
+    background-color: var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-outline {
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background-color: var(--accent);
+    color: white;
+}
+
+.card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+.page-title {
+    color: var(--text-dark);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Job Portal System</title>
+</head>
+<link rel="stylesheet" th:href="@{/css/global.css}">
+<link rel="stylesheet" th:href="@{/css/login.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-user-plus"></i>
+                <h1>Create Account</h1>
+                <p>Join our job portal today</p>
+            </div>
+
+            <div th:if="${param.success}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                Registration successful! Please login.
+            </div>
+
+            <div th:if="${param.error}" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                Registration failed. Email may already be in use.
+            </div>
+
+            <form th:action="@{/register}" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="fullName">
+                        <i class="fas fa-user"></i>
+                        Full Name
+                    </label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required
+                        autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required
+                        minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">
+                        <i class="fas fa-user-tag"></i>
+                        I am a
+                    </label>
+                    <select id="role" name="role" required class="form-input">
+                        <option value="">Select your role</option>
+                        <option value="USER">Job Seeker</option>
+                        <option value="RECRUITER">Recruiter</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>or sign up with</span>
+            </div>
+
+            <div class="social-login">
+                <a href="/oauth2/authorization/google" class="social-btn google">
+                    <i class="fab fa-google"></i>
+                    <span>Sign up with Google</span>
+                </a>
+            </div>
+
+            <div class="footer-text">
+                Already have an account? <a th:href="@{/login}">Sign in</a>
+            </div>
+        </div>
+        <script th:src="@{/js/theme.js}"></script>
+</body>
+
+</html>

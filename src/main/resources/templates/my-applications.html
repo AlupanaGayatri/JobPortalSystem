@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Jobs - Job Portal</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <!-- Page CSS -->
+    <link rel="stylesheet" th:href="@{/css/my-applications.css}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <i class="fas fa-briefcase"></i> Job Portal
+        </a>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/jobs">Browse Jobs</a>
+            <a href="/my-applications" class="active">My Applications</a>
+            <a href="/profile">Profile</a>
+            <form action="/logout" method="post" style="display:inline;">
+                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                <button type="submit"
+                    style="background:none; border:none; color:#666; cursor:pointer; font-weight:500; font-size:15px; margin-left:20px;">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>My Applications</h2>
+            <button onclick="deleteAllApps()" class="btn-delete-all">
+                <i class="fas fa-trash-alt"></i> Clear History
+            </button>
+        </div>
+
+        <div id="apps" class="loading">
+            <i class="fas fa-circle-notch fa-spin"></i> Loading applications...
+        </div>
+    </div>
+
+    <script>
+        function getProgressWidth(status) {
+            if (status === 'PENDING') return '15%'; // Just started
+            if (status === 'REVIEWED') return '40%';
+            if (status === 'INTERVIEW') return '65%';
+            if (status === 'OFFERED' || status === 'HIRED') return '100%';
+            if (status === 'REJECTED' || status === 'WITHDRAWN') return '100%'; // Full line but maybe red?
+            return '0%';
+        }
+
+        function renderTimeline(status) {
+            let s1 = '', s2 = '', s3 = '', s4 = '';
+            let width = '0%';
+
+            if (status === 'PENDING') {
+                s1 = 'active'; width = '12%';
+            } else if (status === 'REVIEWED') {
+                s1 = 'completed'; s2 = 'active'; width = '38%';
+            } else if (status === 'INTERVIEW') {
+                s1 = 'completed'; s2 = 'completed'; s3 = 'active'; width = '62%';
+            } else if (status === 'OFFERED' || status === 'HIRED') {
+                s1 = 'completed'; s2 = 'completed'; s3 = 'completed'; s4 = 'completed'; width = '100%';
+            } else if (status === 'REJECTED' || status === 'WITHDRAWN') {
+                // For rejected, we might show full progress but different color, or just stop.
+                // For now, let's show applied as completed.
+                s1 = 'completed'; width = '12%';
+            }
+
+            return `
+                <div class="status-timeline">
+                    <div class="status-line"></div>
+                    <div class="status-line-fill" style="width: ${width}"></div>
+                    
+                    <div class="status-step ${s1}">
+                        <div class="dot"></div>
+                        <div class="label">Applied</div>
+                    </div>
+                    <div class="status-step ${s2}">
+                        <div class="dot"></div>
+                        <div class="label">Application Sent</div>
+                    </div>
+                    <div class="status-step ${s3}">
+                        <div class="dot"></div>
+                        <div class="label">Viewed by Recruiter</div>
+                    </div>
+                    <div class="status-step ${s4}">
+                        <div class="dot"></div>
+                        <div class="label">Shortlisted</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        fetch('/api/applications/my')
+            .then(response => {
+                if (response.status === 401) {
+                    window.location.href = '/login.html?redirect=/my-applications';
+                    throw new Error('Not logged in');
+                }
+                return response.json();
+            })
+            .then(apps => {
+                const container = document.getElementById('apps');
+
+                if (!apps || apps.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                            <h3>No applications found</h3>
+                            <p style="color:#666; margin-bottom:20px">You haven't applied to any jobs yet.</p>
+                            <a href="/jobs" class="btn-browse">Browse Jobs</a>
+                        </div>
+                    `;
+                    // Hide clear button if empty
+                    document.querySelector('.btn-delete-all').style.display = 'none';
+                    return;
+                }
+
+                container.className = 'applications-list';
+                container.innerHTML = apps.map(app => {
+                    const jobTitle = app.job ? app.job.title : 'Unknown Job';
+                    const company = app.job ? app.job.companyName : 'Unknown Company';
+                    const date = new Date(app.appliedDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                    let badgeClass = 'active';
+                    if (app.status === 'REJECTED') badgeClass = 'danger';
+                    if (app.status === 'WITHDRAWN') badgeClass = 'gray';
+                    if (app.status === 'HIRED') badgeClass = 'success';
+
+                    return `
+                        <div class="application-card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="job-role">${jobTitle}</div>
+                                    <div class="company-name">${company}</div>
+                                </div>
+                                <div class="applied-meta">
+                                    <div class="applied-date">Applied on ${date}</div>
+                                    <span class="status-badge ${badgeClass}">
+                                        ${app.status}
+                                    </span>
+                                </div>
+                            </div>
+
+                            ${renderTimeline(app.status)}
+
+                            <div class="action-area">
+                                ${app.status === 'PENDING' ?
+                            `<button onclick="withdrawApp(${app.id})" class="btn-withdraw">Withdraw Application</button>`
+                            : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            })
+            .catch(err => {
+                console.error(err);
+                if (err.message !== 'Not logged in') {
+                    container.innerHTML = '<div class="loading" style="color:#ef4444">Error loading applications</div>';
+                }
+            });
+
+        function withdrawApp(id) {
+            if (!confirm('Are you sure you want to withdraw this application?')) return;
+            fetch(`/api/applications/withdraw/${id}`, { method: 'PUT' })
+                .then(r => {
+                    if (r.ok) window.location.reload();
+                    else alert('Failed to withdraw');
+                });
+        }
+
+        function deleteAllApps() {
+            if (!confirm('Are you sure you want to clear your entire application history? This cannot be undone.')) return;
+            fetch('/api/applications/my', { method: 'DELETE' })
+                .then(r => {
+                    if (r.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete history.');
+                    }
+                });
+        }
+    </script>
+    <script th:src="@{/js/theme.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+body {
+    background: #eef2f7;
+    margin: 0;
+    padding: 30px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.resume-container {
+    display: flex;
+    justify-content: center;
+}
+
+.resume-card {
+    width: 70%;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.resume-card h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.resume-card h2 {
+    margin-top: 25px;
+    font-size: 20px;
+    border-left: 4px solid #007bff;
+    padding-left: 10px;
+}
+
+.skill {
+    display: inline-block;
+    margin-right: 10px;
+    background: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Education</title>
+    <link rel="stylesheet" th:href="@{/css/list-pages.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <h2 class="logo">JobPortal</h2>
+
+            <nav class="nav">
+                <a href="/dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="/education" class="active">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </a>
+                <a href="/skills">
+                    <i class="fas fa-tools"></i> Skills
+                </a>
+                <a href="/experience">
+                    <i class="fas fa-briefcase"></i> Experience
+                </a>
+                <a href="/profile/view">
+                    <i class="fas fa-eye"></i> View Profile
+                </a>
+            </nav>
+
+            <a href="/logout" class="logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </aside>
+
+        <main class="content">
+
+            <h1><i class="fas fa-graduation-cap" style="color: var(--accent);"></i> Your Education</h1>
+
+            <a href="/education/add" class="add-btn">
+                <i class="fas fa-plus"></i> Add Education
+            </a>
+
+            <div class="list-container">
+
+                <div th:each="edu : ${education}" class="item-card">
+                    <p class="name" th:text="${edu.degree}"></p>
+                    <p class="sub" th:text="${edu.institution}"></p>
+                    <span class="year"><i class="fas fa-calendar-alt"></i> <span th:text="${edu.year}"></span></span>
+
+                    <div class="actions">
+                        <a th:href="@{'/education/edit/' + ${edu.id}}" class="edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a th:href="@{'/education/delete/' + ${edu.id}}" class="delete"
+                            onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

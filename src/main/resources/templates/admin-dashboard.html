@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Job Portal System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #38240D;
+            /* Dark Chocolate */
+            --primary-hover: #533513;
+            --accent: #C05800;
+            /* Caramel */
+            --accent-hover: #984400;
+            --text-dark: #38240D;
+            --text-gray: #713600;
+            --bg-light: #FDFBD4;
+            /* Cream */
+            --border-color: #D1C7BD;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--text-dark);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-hover);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card h3 {
+            color: var(--text-gray);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-card h2 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .actions-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .actions-section h2 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            padding: 15px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-gray);
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Admin Dashboard</h1>
+            <div class="nav-links">
+                <a href="/admin-dashboard.html">Dashboard</a>
+                <a href="/admin-applications.html">Applications</a>
+                <a href="/admin-create-job.html">Create Job</a>
+                <a href="/admin-users.html">Users</a>
+                <a href="/admin-jobs.html">Jobs</a>
+                <a href="/login.html">Logout</a>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">Loading dashboard data...</div>
+
+        <div id="dashboard-content" style="display: none;">
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Jobs</h3>
+                    <div class="value" id="totalJobs">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Applications</h3>
+                    <div class="value" id="totalApplications">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Jobs</h3>
+                    <div class="value" id="activeJobs">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Closed Jobs</h3>
+                    <div class="value" id="closedJobs">0</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>Applications by Status</h2>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2>Users by Role</h2>
+                    <div class="chart-container">
+                        <canvas id="roleChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2>Applications Trend (Last 6 Months)</h2>
+                    <div class="chart-container">
+                        <canvas id="applicationsTrendChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2>Jobs Posted Trend (Last 6 Months)</h2>
+                    <div class="chart-container">
+                        <canvas id="jobsTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="actions-section">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <a href="/admin-applications.html" class="action-btn">Manage Applications</a>
+                    <a href="/admin-create-job.html" class="action-btn">Create New Job</a>
+                    <button class="action-btn" onclick="manageUsers()">Manage Users</button>
+                    <button class="action-btn" onclick="manageJobs()">Manage Jobs</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication check for admin pages
+        function checkAdminAuth() {
+            const saved = localStorage.getItem('user');
+            if (!saved) {
+                return null;
+            }
+
+            try {
+                const user = JSON.parse(saved);
+                if (!user || !user.id) {
+                    localStorage.removeItem('user');
+                    return null;
+                }
+                // Check if user is admin
+                if (user.role !== 'ADMIN') {
+                    return { user: user, isAdmin: false };
+                }
+                return { user: user, isAdmin: true };
+            } catch (e) {
+                localStorage.removeItem('user');
+                return null;
+            }
+        }
+
+        // Check authentication on page load
+        const authResult = checkAdminAuth();
+        if (!authResult || !authResult.isAdmin) {
+            // Not logged in or not admin - redirect
+            localStorage.removeItem('user');
+            if (authResult && !authResult.isAdmin) {
+                alert('Access denied. Admin privileges required.');
+            }
+            window.location.href = '/login.html';
+        }
+
+        let statusChart, roleChart, applicationsTrendChart, jobsTrendChart;
+
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/api/analytics/dashboard');
+                if (!response.ok) {
+                    throw new Error('Failed to load dashboard data');
+                }
+                const data = await response.json();
+
+                // Update statistics
+                document.getElementById('totalUsers').textContent = data.totalUsers || 0;
+                document.getElementById('totalJobs').textContent = data.totalJobs || 0;
+                document.getElementById('totalApplications').textContent = data.totalApplications || 0;
+                document.getElementById('activeJobs').textContent = data.activeJobs || 0;
+                document.getElementById('closedJobs').textContent = data.closedJobs || 0;
+
+                // Create charts
+                createStatusChart(data.applicationsByStatus || {});
+                createRoleChart(data.usersByRole || {});
+                createApplicationsTrendChart(data.applicationsByMonth || {});
+                createJobsTrendChart(data.jobsByMonth || {});
+
+                // Show dashboard content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('loading').innerHTML =
+                    '<div style="color: #ff4444;">Error loading dashboard. Please refresh the page.</div>';
+            }
+        }
+
+        function createStatusChart(data) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
+
+            if (statusChart) {
+                statusChart.destroy();
+            }
+
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createRoleChart(data) {
+            const ctx = document.getElementById('roleChart').getContext('2d');
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe'];
+
+            if (roleChart) {
+                roleChart.destroy();
+            }
+
+            roleChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Users',
+                        data: values,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderColor: colors.slice(0, labels.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createApplicationsTrendChart(data) {
+            const ctx = document.getElementById('applicationsTrendChart').getContext('2d');
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+
+            if (applicationsTrendChart) {
+                applicationsTrendChart.destroy();
+            }
+
+            applicationsTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Applications',
+                        data: values,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createJobsTrendChart(data) {
+            const ctx = document.getElementById('jobsTrendChart').getContext('2d');
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+
+            if (jobsTrendChart) {
+                jobsTrendChart.destroy();
+            }
+
+            jobsTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jobs Posted',
+                        data: values,
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function manageUsers() {
+            window.location.href = '/admin-users.html';
+        }
+
+        function manageJobs() {
+            window.location.href = '/admin-jobs.html';
+        }
+
+        // Load dashboard on page load
+        loadDashboard();
+
+        // Refresh dashboard every 30 seconds
+        setInterval(loadDashboard, 30000);
+    </script>
+</body>
+
+</html>

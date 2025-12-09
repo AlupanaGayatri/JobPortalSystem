@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Jobs - Job Portal System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <!-- Page CSS -->
+    <link rel="stylesheet" th:href="@{/css/jobs.css}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <i class="fas fa-briefcase"></i> Job Portal
+        </a>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/jobs" class="active">Browse Jobs</a>
+            <a href="/my-applications">My Applications</a>
+            <a href="/profile">Profile</a>
+            <form action="/logout" method="post" style="display:inline;">
+                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                <button type="submit"
+                    style="background:none; border:none; color:#666; cursor:pointer; font-weight:500; font-size:15px; margin-left:20px;">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Hero Search Section -->
+    <div class="search-hero">
+        <div class="container">
+            <h2 class="search-title">Find your dream job now</h2>
+            <div class="search-bar-wrapper">
+                <div class="search-input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Enter skills / designations / companies">
+                </div>
+                <!-- Divider -->
+                <div style="width: 1px; height: 30px; background: #e0e0e0;"></div>
+                <div class="search-input-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" id="searchLocation" class="search-input" placeholder="Enter location">
+                </div>
+                <button onclick="applyFilters()" class="search-btn">Search</button>
+            </div>
+
+            <!-- Quick Search Pills -->
+            <div
+                style="text-align:center; margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <span style="font-size:13px; color:#666; font-weight:500;">Quick Search:</span>
+                <button onclick="quickSearch('IT')" class="pill">IT / Software</button>
+                <button onclick="quickSearch('Sales')" class="pill">Sales</button>
+                <button onclick="quickSearch('Marketing')" class="pill">Marketing</button>
+                <button onclick="quickSearch('HR')" class="pill">HR</button>
+                <button onclick="quickSearch('Finance')" class="pill">Banking & Finance</button>
+                <button onclick="quickSearch('Remote')" class="pill">Remote Jobs</button>
+                <button onclick="quickSearch('Internship')" class="pill">Internships</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-layout">
+            <!-- Sidebar Filters -->
+            <aside class="filters-panel">
+                <div class="filter-header">
+                    <div class="filter-title">All Filters</div>
+                    <button onclick="clearFilters()"
+                        style="background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; font-weight:600;">Clear</button>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">Experience</div>
+                    <select id="filterExperience" class="form-control" onchange="applyFilters()">
+                        <option value="">Any Experience</option>
+                        <option value="Fresher">Fresher</option>
+                        <option value="0-1 Years">0-1 Years</option>
+                        <option value="1-3 Years">1-3 Years</option>
+                        <option value="3-5 Years">3-5 Years</option>
+                        <option value="5-8 Years">5-8 Years</option>
+                        <option value="8-12 Years">8-12 Years</option>
+                        <option value="12+ Years">12+ Years</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">Job Type</div>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="jobType" value="Full-time" onchange="applyFilters()"> Full-time
+                    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="jobType" value="Part-time" onchange="applyFilters()"> Part-time
+                    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="jobType" value="Contract" onchange="applyFilters()"> Contract
+                    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="jobType" value="Internship" onchange="applyFilters()"> Internship
+                    </label>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">Salary Range ($)</div>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom:10px;">
+                        <input type="number" id="filterMinSalary" placeholder="Min" class="form-control">
+                        <input type="number" id="filterMaxSalary" placeholder="Max" class="form-control">
+                    </div>
+                    <button onclick="applyFilters()" class="btn-apply-filters">Apply Filter</button>
+                </div>
+            </aside>
+
+            <!-- Job List -->
+            <div>
+                <div id="jobsStats" style="margin-bottom: 20px; font-weight: 600; color: #4b5563;"></div>
+                <div id="jobList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchLocation').value = '';
+            document.getElementById('filterMinSalary').value = '';
+            document.getElementById('filterMaxSalary').value = '';
+            document.getElementById('filterExperience').value = '';
+            document.querySelectorAll('input[name="jobType"]').forEach(cb => cb.checked = false);
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const title = document.getElementById('searchInput').value;
+            const location = document.getElementById('searchLocation').value;
+            // Get experience from the new sidebar dropdown
+            const experienceLevel = document.getElementById('filterExperience').value;
+            const minSalary = document.getElementById('filterMinSalary').value;
+            const maxSalary = document.getElementById('filterMaxSalary').value;
+
+            // Handle multiple job types from checkboxes
+            const jobTypeCheckboxes = document.querySelectorAll('input[name="jobType"]:checked');
+            const jobTypes = Array.from(jobTypeCheckboxes).map(cb => cb.value);
+
+            // Build query string
+            const params = new URLSearchParams();
+            if (title) params.append('title', title);
+            if (location) params.append('location', location);
+            if (experienceLevel) params.append('experienceLevel', experienceLevel);
+            if (minSalary) params.append('minSalary', minSalary);
+            if (maxSalary) params.append('maxSalary', maxSalary);
+            if (jobTypes.length > 0) params.append('jobType', jobTypes[0]); // Sending first due to backend simplicity
+            params.append('status', 'ACTIVE');
+
+            // Show loading
+            document.getElementById('jobList').innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">Searching jobs...</p></div>';
+
+            fetch(`/api/v1/jobs?${params.toString()}`)
+                .then(r => {
+                    if (!r.ok) throw new Error('Network response was not ok');
+                    return r.json();
+                })
+                .then(response => {
+                    console.log('API Response:', response);
+
+                    let jobs = [];
+                    if (response.data) jobs = response.data;
+                    else if (response.content) jobs = response.content;
+                    else if (Array.isArray(response)) jobs = response;
+
+                    displayJobs(jobs);
+                    updateStats(jobs);
+                })
+                .catch(err => {
+                    console.error('Error fetching jobs:', err);
+                    document.getElementById('jobList').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle fa-2x"></i><h3>Error loading jobs</h3><p>Please try again later</p></div>';
+                });
+        }
+
+        function displayJobs(jobs) {
+            const jobList = document.getElementById('jobList');
+
+            if (!jobs || jobs.length === 0) {
+                jobList.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-search" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
+                    <h3>No jobs found matching your criteria</h3>
+                    <p>Try removing some filters or use broader keywords</p>
+                </div>
+            `;
+                return;
+            }
+
+            jobList.innerHTML = jobs.map(job => {
+                // Formatting Helpers
+                const salary = job.minSalary && job.maxSalary
+                    ? `$${(job.minSalary / 1000).toFixed(0)}k - ${(job.maxSalary / 1000).toFixed(0)}k`
+                    : (job.salary || 'Not disclosed');
+
+                const exp = job.experienceLevel || '0-5 Yrs';
+                const loc = job.location || 'Remote';
+                const daysAgo = job.postedDate ? Math.floor((new Date() - new Date(job.postedDate)) / (1000 * 60 * 60 * 24)) : 0;
+                const timeLabel = daysAgo === 0 ? 'Today' : `${daysAgo} days ago`;
+
+                const skillsDesc = job.skillsRequired || job.description || "";
+                // Extract first few skills if comma separated, else just show part of description
+                const skills = skillsDesc.includes(',') ? skillsDesc.split(',').slice(0, 4) : [skillsDesc.substring(0, 20)];
+
+                return `
+                <div class="job-card">
+                    <a href="#" class="job-title">${job.title}</a>
+                    <div class="job-company">${job.companyName}</div>
+                    
+                    <div class="job-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-briefcase"></i> ${exp}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-dollar-sign"></i> ${salary}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i> ${loc}
+                        </div>
+                    </div>
+
+                    <div class="job-desc">
+                        <i class="far fa-file-alt" style="margin-right: 5px;"></i>
+                        ${job.description}
+                    </div>
+
+                    <div class="tags-container">
+                         ${skills.map(skill => `<span class="tag-pill">${skill.trim()}</span>`).join('')}
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="posted-days"><i class="far fa-clock"></i> ${timeLabel}</span>
+                        <button onclick="applyForJob(${job.id}, this)" class="btn-apply">Apply</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats(jobs) {
+            const count = jobs ? jobs.length : 0;
+            document.getElementById('jobsStats').innerText = `${count} Jobs Found`;
+        }
+
+        async function applyForJob(jobId, btnElement) {
+            const originalText = btnElement.innerText;
+            btnElement.disabled = true;
+            btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const response = await fetch('/api/applications/apply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jobId: jobId, resumeText: "" })
+                });
+
+                if (response.ok) {
+                    btnElement.innerHTML = '<i class="fas fa-check"></i> Applied';
+                    btnElement.style.color = 'green';
+                } else {
+                    btnElement.innerText = 'Failed';
+                    setTimeout(() => { btnElement.innerText = originalText; btnElement.disabled = false; }, 2000);
+                }
+            } catch (e) {
+                console.error(e);
+                btnElement.innerText = 'Error';
+            }
+        }
+
+        function quickSearch(type) {
+            // Reset filters first
+            clearFilters();
+
+            if (type === 'Remote') {
+                document.getElementById('searchLocation').value = 'Remote';
+            } else if (type === 'Internship') {
+                const internCb = document.querySelector('input[value="Internship"]');
+                if (internCb) internCb.checked = true;
+            } else if (type === 'IT') {
+                document.getElementById('searchInput').value = 'Developer'; // Common IT keyword
+            } else {
+                document.getElementById('searchInput').value = type;
+            }
+
+            applyFilters();
+        }
+
+        // Init
+        // Call loadJobs after defining it... wait, I removed loadJobs wrapper function to avoid duplication
+        // So I just call applyFilters directly as init
+        applyFilters();
+
+        // Enter key support
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyFilters();
+        });
+    </script>
+</body>
+
+</html>

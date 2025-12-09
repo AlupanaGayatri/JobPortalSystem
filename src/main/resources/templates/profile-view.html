@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile View - JobPortal</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/profile-view.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <h2 class="logo">JobPortal</h2>
+        <nav class="menu">
+            <a href="/dashboard">
+                <i class="fas fa-home icon"></i> Dashboard
+            </a>
+            <a href="/profile">
+                <i class="fas fa-user icon"></i> Profile
+            </a>
+            <a href="/education">
+                <i class="fas fa-graduation-cap icon"></i> Education
+            </a>
+            <a href="/experience">
+                <i class="fas fa-briefcase icon"></i> Experience
+            </a>
+            <a href="/skills">
+                <i class="fas fa-tools icon"></i> Skills
+            </a>
+            <a href="/profile/view" class="active">
+                <i class="fas fa-eye icon"></i> View Profile
+            </a>
+        </nav>
+        <a href="/logout" class="logout">
+            <i class="fas fa-sign-out-alt icon"></i> Logout
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="profile-container">
+
+            <!-- Header Section with Profile Photo -->
+            <div class="profile-header">
+                <div class="profile-photo-section">
+                    <div class="photo-wrapper">
+                        <img th:if="${profile != null and profile.profilePhoto != null}"
+                            th:src="@{/uploads/{name}(name=${profile.profilePhoto})}" alt="Profile Photo"
+                            class="profile-photo" />
+                        <div th:if="${profile == null or profile.profilePhoto == null}" class="photo-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-header-content">
+                    <h1
+                        th:text="${profile != null and profile.headline != null ? profile.headline : (user != null ? user.fullName : 'Your Name')}">
+                        Your Name</h1>
+                    <p class="role"
+                        th:text="${profile != null and profile.currentRole != null ? profile.currentRole : 'Professional'}">
+                        Professional</p>
+                    <div class="contact-info-header">
+                        <span th:if="${profile != null and profile.phone != null}">
+                            <i class="fas fa-phone"></i>
+                            <span th:text="${profile.phone}"></span>
+                        </span>
+                        <span th:if="${user != null and user.email != null}">
+                            <i class="fas fa-envelope"></i>
+                            <span th:text="${user.email}"></span>
+                        </span>
+                        <span th:if="${profile != null and profile.address != null}">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span th:text="${profile.address}"></span>
+                        </span>
+                    </div>
+                    <div class="social-links"
+                        th:if="${profile != null and (profile.linkedinUrl != null or profile.githubUrl != null)}">
+                        <a th:if="${profile.linkedinUrl != null}" th:href="${profile.linkedinUrl}" target="_blank"
+                            class="social-link linkedin">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <a th:if="${profile.githubUrl != null}" th:href="${profile.githubUrl}" target="_blank"
+                            class="social-link github">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                    <div class="header-actions">
+                        <a th:href="@{/profile}" class="btn-edit">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <a th:if="${profile != null and profile.resumeFile != null}"
+                            th:href="@{/uploads/{name}(name=${profile.resumeFile})}" target="_blank" class="btn-resume">
+                            <i class="fas fa-file-pdf"></i> View Resume
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="section" th:if="${profile != null and profile.summary != null}">
+                <h2 class="section-title">
+                    <i class="fas fa-user-circle"></i> Professional Summary
+                </h2>
+                <p class="summary-text" th:text="${profile.summary}">Summary text here</p>
+            </div>
+
+            <!-- Experience Section -->
+            <div class="section" th:if="${experienceList != null and !experienceList.isEmpty()}">
+                <h2 class="section-title">
+                    <i class="fas fa-briefcase"></i> Work Experience
+                </h2>
+                <div class="timeline">
+                    <div th:each="exp : ${experienceList}" class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 th:text="${exp.role}">Job Title</h3>
+                            <h4 th:text="${exp.company}">Company Name</h4>
+                            <p class="timeline-duration" th:text="${exp.duration}">Duration</p>
+                            <p class="timeline-description" th:if="${exp.description != null}"
+                                th:text="${exp.description}">Description</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education Section -->
+            <div class="section" th:if="${educationList != null and !educationList.isEmpty()}">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </h2>
+                <div class="education-grid">
+                    <div th:each="edu : ${educationList}" class="education-card">
+                        <div class="education-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="education-content">
+                            <h3 th:text="${edu.course}">Degree</h3>
+                            <h4 th:text="${edu.institution}">Institution</h4>
+                            <p class="education-period">
+                                <i class="fas fa-calendar"></i>
+                                <span th:text="${edu.startYear} + ' - ' + ${edu.endYear}">Year Range</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="section" th:if="${skillsList != null and !skillsList.isEmpty()}">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i> Skills
+                </h2>
+                <div class="skills-container">
+                    <div th:each="skill : ${skillsList}" class="skill-badge"
+                        th:classappend="${skill.level == 'Advanced'} ? 'skill-advanced' : (${skill.level == 'Intermediate'} ? 'skill-intermediate' : 'skill-beginner')">
+                        <span class="skill-name" th:text="${skill.name}">Skill Name</span>
+                        <span class="skill-level" th:text="${skill.level}">Level</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i> Additional Information
+                </h2>
+                <div class="info-grid">
+                    <div class="info-item" th:if="${profile != null and profile.experience != null}">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Total Experience</strong>
+                            <p th:text="${profile.experience} + ' years'">0 years</p>
+                        </div>
+                    </div>
+                    <div class="info-item" th:if="${skillsList != null}">
+                        <i class="fas fa-tasks"></i>
+                        <div>
+                            <strong>Total Skills</strong>
+                            <p th:text="${#lists.size(skillsList)} + ' skills'">0 skills</p>
+                        </div>
+                    </div>
+                    <div class="info-item" th:if="${educationList != null}">
+                        <i class="fas fa-certificate"></i>
+                        <div>
+                            <strong>Qualifications</strong>
+                            <p th:text="${#lists.size(educationList)} + ' entries'">0 entries</p>
+                        </div>
+                    </div>
+                    <div class="info-item" th:if="${experienceList != null}">
+                        <i class="fas fa-building"></i>
+                        <div>
+                            <strong>Work Experiences</strong>
+                            <p th:text="${#lists.size(experienceList)} + ' positions'">0 positions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script th:src="@{/js/theme.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Experience</title>
+    <link rel="stylesheet" th:href="@{/css/list-pages.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <h2 class="logo">JobPortal</h2>
+
+            <nav class="nav">
+                <a href="/dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="/experience" class="active">
+                    <i class="fas fa-briefcase"></i> Experience
+                </a>
+                <a href="/education">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </a>
+                <a href="/skills">
+                    <i class="fas fa-tools"></i> Skills
+                </a>
+                <a href="/profile/view">
+                    <i class="fas fa-eye"></i> View Profile
+                </a>
+            </nav>
+
+            <a href="/logout" class="logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </aside>
+
+        <main class="content">
+
+            <h1><i class="fas fa-briefcase" style="color: var(--accent);"></i> Your Experience</h1>
+
+            <a href="/experience/add" class="add-btn">
+                <i class="fas fa-plus"></i> Add Experience
+            </a>
+
+            <div class="list-container">
+
+                <div th:each="exp : ${experience}" class="item-card">
+                    <p class="name" th:text="${exp.role}"></p>
+                    <p class="sub" th:text="${exp.company}"></p>
+
+                    <div class="meta-info" style="margin-bottom: 12px; color: var(--text-gray); font-size: 14px;">
+                        <span th:if="${exp.years != null}" class="year"><i class="fas fa-clock"></i> <span
+                                th:text="${exp.years}"></span> Years</span>
+                    </div>
+
+                    <p class="desc" th:text="${exp.description}"
+                        style="font-size: 14px; color: #555; margin-bottom: 15px; border-left: 3px solid var(--border-color); padding-left: 10px;">
+                    </p>
+
+                    <div class="actions">
+                        <a th:href="@{'/experience/edit/' + ${exp.id}}" class="edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a th:href="@{'/experience/delete/' + ${exp.id}}" class="delete"
+                            onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

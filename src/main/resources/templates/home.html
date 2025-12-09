@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Dashboard - Job Portal</title>
+    <!-- Use Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <!-- Reuse Profile CSS for Sidebar Layout -->
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <!-- Page Specific CSS -->
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">JobPortal</h2>
+        <nav class="menu">
+            <a href="/dashboard" class="active">
+                <i class="fas fa-home icon"></i> Dashboard
+            </a>
+            <a href="/profile">
+                <i class="fas fa-user icon"></i> Profile
+            </a>
+            <a href="/education">
+                <i class="fas fa-graduation-cap icon"></i> Education
+            </a>
+            <a href="/experience">
+                <i class="fas fa-briefcase icon"></i> Experience
+            </a>
+            <a href="/skills">
+                <i class="fas fa-tools icon"></i> Skills
+            </a>
+            <a href="/jobs">
+                <i class="fas fa-search icon"></i> Browse Jobs
+            </a>
+            <a href="/my-applications">
+                <i class="fas fa-file-contract icon"></i> My Applications
+            </a>
+
+            <!-- Theme Settings Button in Sidebar -->
+            <button onclick="toggleThemeModal()"
+                style="background:transparent; border:none; color:inherit; font:inherit; cursor:pointer; width:100%; text-align:left; padding:12px 15px; display:flex; align-items:center;">
+                <i class="fas fa-palette icon" style="margin-right:10px;"></i> Theme Settings
+            </button>
+        </nav>
+        <a href="/logout" class="logout">
+            <i class="fas fa-sign-out-alt icon"></i> Logout
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <div class="welcome-header">
+            <h1 th:text="'Welcome back, ' + ${user.fullName}">Welcome User</h1>
+            <p>Ready to take the next step in your career?</p>
+        </div>
+
+        <div class="dashboard-grid">
+
+            <a href="/profile" class="dashboard-card primary-card">
+                <div class="card-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <h3>Profile Setup</h3>
+                <p>Complete your profile to stand out to recruiters.</p>
+                <span class="card-action">Update Profile <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="/education" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Education</h3>
+                <p>Add your qualifications and certifications.</p>
+                <span class="card-action">Manage Education <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="/experience" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Experience</h3>
+                <p>Highlight your professional journey.</p>
+                <span class="card-action">Manage Experience <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="/skills" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>Skills</h3>
+                <p>Showcase your technical and soft skills.</p>
+                <span class="card-action">Manage Skills <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="/jobs" class="dashboard-card accent-card">
+                <div class="card-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Browse Jobs</h3>
+                <p>Explore thousands of job opportunities.</p>
+                <span class="card-action">Search Jobs <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="/my-applications" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h3>My Applications</h3>
+                <p>Track the status of your job applications.</p>
+                <span class="card-action">View Applications <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- Theme Settings Modal (Reused) -->
+    <div id="themeModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+        <div
+            style="background:var(--bg-white); padding:30px; border-radius:12px; width:90%; max-width:500px; box-shadow:0 4px 20px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="font-size:20px; color:var(--text-dark);">Theme Settings</h2>
+                <button onclick="toggleThemeModal()"
+                    style="background:none; border:none; cursor:pointer; font-size:20px; color:var(--text-gray);"><i
+                        class="fas fa-times"></i></button>
+            </div>
+
+            <div style="margin-bottom:25px;">
+                <h3 style="font-size:16px; margin-bottom:15px; color:var(--text-body);">Presets</h3>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:10px;">
+                    <button onclick="setTheme('default')" class="theme-btn"
+                        style="background:#38240D; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;">Chocolate</button>
+                    <button onclick="setTheme('ocean')" class="theme-btn"
+                        style="background:#0F5156; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;">Ocean</button>
+                    <button onclick="setTheme('sunset')" class="theme-btn"
+                        style="background:#7c2d12; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;">Sunset</button>
+                    <button onclick="setTheme('midnight')" class="theme-btn"
+                        style="background:#1e1b4b; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;">Midnight</button>
+                    <button onclick="setTheme('berry')" class="theme-btn"
+                        style="background:#831843; color:white; padding:10px; border-radius:8px; border:none; cursor:pointer;">Berry</button>
+                </div>
+            </div>
+
+            <div style="border-top:1px solid var(--border-color); padding-top:20px;">
+                <h3 style="font-size:16px; margin-bottom:15px; color:var(--text-body);">Custom Theme</h3>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <div>
+                        <label style="display:block; font-size:12px; color:var(--text-gray); margin-bottom:5px;">Primary
+                            Color</label>
+                        <input type="color" id="customPrimary" onchange="updateCustom('primary', this.value)"
+                            style="width:100%; height:40px; border:1px solid var(--border-color); border-radius:6px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; color:var(--text-gray); margin-bottom:5px;">Accent
+                            Color</label>
+                        <input type="color" id="customAccent" onchange="updateCustom('accent', this.value)"
+                            style="width:100%; height:40px; border:1px solid var(--border-color); border-radius:6px;">
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; font-size:12px; color:var(--text-gray); margin-bottom:5px;">Background</label>
+                        <input type="color" id="customBg" onchange="updateCustom('bgLight', this.value)"
+                            style="width:100%; height:40px; border:1px solid var(--border-color); border-radius:6px;">
+                    </div>
+                </div>
+                <button onclick="setTheme('custom')" class="btn-primary"
+                    style="width:100%; margin-top:20px; justify-content:center;">Apply Custom Theme</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/theme.js}"></script>
+    <script>
+        function toggleThemeModal() {
+            const modal = document.getElementById('themeModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('themeModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('themeModal')) toggleThemeModal();
+        });
+
+        function updateCustom(key, value) {
+            updateCustomColor(key, value);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const customColors = JSON.parse(localStorage.getItem('customColors') || '{}');
+            if (customColors.primary) document.getElementById('customPrimary').value = customColors.primary;
+            if (customColors.accent) document.getElementById('customAccent').value = customColors.accent;
+            if (customColors.bgLight) document.getElementById('customBg').value = customColors.bgLight;
+        });
+    </script>
+</body>
+
+</html>

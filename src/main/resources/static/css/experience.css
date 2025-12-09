@@ -1,0 +1,515 @@
+:root {
+    --primary: #38240D;
+    /* Dark Chocolate */
+    --primary-hover: #533513;
+    --accent: #C05800;
+    /* Caramel */
+    --accent-hover: #984400;
+    --text-dark: #38240D;
+    --text-gray: #713600;
+    --bg-light: #FDFBD4;
+    /* Cream */
+    --border-color: #D1C7BD;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.exp-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: var(--primary);
+    color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    margin: 18px 0;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #94a3b8;
+    font-size: 16px;
+    display: flex;
+    gap: 12px;
+    transition: 0.3s;
+}
+
+.menu li.active a,
+.menu a:hover {
+    color: white;
+    font-weight: 600;
+}
+
+.logout {
+    color: #ef4444;
+    text-decoration: none;
+}
+
+/* Content Area */
+.content {
+    flex: 1;
+    padding: 40px 60px;
+    overflow-y: auto;
+}
+
+.title {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.desc {
+    color: var(--text-gray);
+    margin-bottom: 25px;
+}
+
+/* Button */
+.add-btn {
+    padding: 12px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    background: var(--accent-hover);
+}
+
+/* Experience Cards */
+.exp-list {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.exp-card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.exp-card h2 {
+    font-size: 20px;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.company {
+    margin: 6px 0;
+    color: var(--text-gray);
+}
+
+.years {
+    color: #94a3b8;
+}
+
+.desc-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Actions */
+.actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.actions a {
+    color: var(--accent);
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.actions a:hover {
+    color: var(--accent-hover);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Popup Styling */
+.popup {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup.show {
+    display: flex;
+}
+
+.popup-content {
+    background: white;
+    padding: 35px;
+    width: 450px;
+    border-radius: 10px;
+    animation: scale 0.3s ease;
+}
+
+@keyframes scale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group textarea {
+    height: 90px;
+    resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Buttons */
+.popup-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.save-btn {
+    background: var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.close-btn {
+    background: #e2e8f0;
+    color: var(--text-dark);
+    padding: 10px 20px;
+}
+
+.exp-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #032a52;
+    color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    margin: 18px 0;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #d1dfef;
+    font-size: 16px;
+    display: flex;
+    gap: 12px;
+    transition: 0.3s;
+}
+
+.menu li.active a,
+.menu a:hover {
+    color: white;
+    font-weight: 600;
+}
+
+.logout {
+    color: #ffdede;
+    text-decoration: none;
+}
+
+/* Content Area */
+.content {
+    flex: 1;
+    padding: 40px 60px;
+    overflow-y: auto;
+}
+
+.title {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.desc {
+    color: var(--text-gray);
+    margin-bottom: 25px;
+}
+
+/* Button */
+.add-btn {
+    padding: 12px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    background: var(--accent-hover);
+}
+
+/* Experience Cards */
+.exp-list {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.exp-card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.exp-card h2 {
+    font-size: 20px;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.company {
+    margin: 6px 0;
+    color: var(--text-gray);
+}
+
+.years {
+    color: #94a3b8;
+}
+
+.desc-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Actions */
+.actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.actions a {
+    color: var(--accent);
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.actions a:hover {
+    color: var(--accent-hover);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Popup Styling */
+.popup {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup.show {
+    display: flex;
+}
+
+.popup-content {
+    background: white;
+    padding: 35px;
+    width: 450px;
+    border-radius: 10px;
+    animation: scale 0.3s ease;
+}
+
+@keyframes scale {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group textarea {
+    height: 90px;
+    resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+/* Buttons */
+.popup-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.save-btn {
+    background: var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.close-btn {
+    background: #e2e8f0;
+    color: var(--text-dark);
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}

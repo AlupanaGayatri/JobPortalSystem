@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Skills</title>
+    <link rel="stylesheet" th:href="@{/css/list-pages.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">JobPortal</h2>
+
+            <nav class="nav">
+                <a href="/dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="/skills" class="active">
+                    <i class="fas fa-tools"></i> Skills
+                </a>
+                <a href="/education">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </a>
+                <a href="/experience">
+                    <i class="fas fa-briefcase"></i> Experience
+                </a>
+                <a href="/profile/view">
+                    <i class="fas fa-eye"></i> View Profile
+                </a>
+            </nav>
+
+            <a class="logout" href="/logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </aside>
+
+        <!-- Main -->
+        <main class="content">
+
+            <h1><i class="fas fa-tools" style="color: var(--accent);"></i> Your Skills</h1>
+
+            <a href="/skills/add" class="add-btn">
+                <i class="fas fa-plus"></i> Add Skill
+            </a>
+
+            <div class="list-container">
+
+                <div th:each="skill : ${skills}" class="item-card">
+                    <p class="name" th:text="${skill.name}"></p>
+                    <!-- Optional: Display Level if added later -->
+
+                    <div class="actions">
+                        <a th:href="@{'/skills/edit/' + ${skill.id}}" class="edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a th:href="@{'/skills/delete/' + ${skill.id}}" class="delete"
+                            onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Job Portal System</title>
+</head>
+<link rel="stylesheet" th:href="@{/css/global.css}">
+<link rel="stylesheet" th:href="@{/css/login.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-briefcase"></i>
+                <h1>Job Portal</h1>
+                <p>Sign in to continue</p>
+            </div>
+
+            <div th:if="${param.error}" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                Invalid email or password
+            </div>
+
+            <div th:if="${param.logout}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                You have been logged out successfully
+            </div>
+
+            <form th:action="@{/login}" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" id="username" name="username" placeholder="Enter your email" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <a href="/oauth2/authorization/google" class="social-btn google">
+                    <i class="fab fa-google"></i>
+                    <span>Sign in with Google</span>
+                </a>
+            </div>
+
+            <div class="footer-text">
+                Don't have an account? <a th:href="@{/register}">Sign up</a>
+            </div>
+        </div>
+        <script th:src="@{/js/theme.js}"></script>
+</body>
+
+</html>
