@@ -118,15 +118,7 @@
 			<version>8.7.0</version>
 		</dependency>
 		
-		<!-- Database Migrations -->
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-mysql</artifactId>
-		</dependency>
+		<!-- Flyway removed to allow Hibernate DDL auto-generation -->
 		
 		<!-- Caching -->
 		<dependency>
