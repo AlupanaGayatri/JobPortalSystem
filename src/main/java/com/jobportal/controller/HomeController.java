@@ -15,6 +15,11 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/login";
+    }
+
     @GetMapping("/home")
     public String homePage(Model model, Principal principal) {
 
