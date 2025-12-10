@@ -12,14 +12,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Override
     public User save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -31,7 +27,6 @@ public class UserServiceImpl implements UserService {
     // Merged methods
     @Override
     public User registerUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
