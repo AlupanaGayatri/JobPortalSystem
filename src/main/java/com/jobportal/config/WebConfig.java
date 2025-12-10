@@ -1,19 +1,14 @@
 package com.jobportal.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class WebConfig {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        registry.addResourceHandler("/uploads/profile/**")
-                .addResourceLocations("file:F:/JobPortalSystem/uploads/profile/");
-
-        registry.addResourceHandler("/uploads/resume/**")
-                .addResourceLocations("file:F:/JobPortalSystem/uploads/resume/");
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
     }
 }

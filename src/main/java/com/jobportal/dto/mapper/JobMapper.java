@@ -32,6 +32,10 @@ public class JobMapper {
                 .postedDate(job.getPostedDate())
                 .status(job.getStatus())
                 .recruiterId(job.getRecruiterId())
+                .minSalary(job.getMinSalary())
+                .maxSalary(job.getMaxSalary())
+                .experienceLevel(job.getExperienceLevel())
+                .jobType(job.getJobType())
                 .build();
     }
 
