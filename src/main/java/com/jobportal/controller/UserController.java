@@ -14,8 +14,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    // Encoder removed (moved to Service)
 
     @GetMapping({ "/register", "/register.html" })
     public String showRegister(Model model) {
@@ -25,7 +24,8 @@ public class UserController {
 
     @PostMapping("/register")
     public String saveUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+        // user.setPassword(encoder.encode(user.getPassword())); // Handled by Service
+        // now
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("USER");
         }
