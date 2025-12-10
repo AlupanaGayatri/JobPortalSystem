@@ -27,6 +27,10 @@ public class JobResponse {
     private String skillsRequired;
     private LocalDate postedDate;
     private String status;
+    private Double minSalary;
+    private Double maxSalary;
+    private String experienceLevel;
+    private String jobType;
 
     /**
      * Recruiter who posted the job
