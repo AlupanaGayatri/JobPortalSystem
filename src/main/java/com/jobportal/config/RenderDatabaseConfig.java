@@ -38,12 +38,12 @@ public class RenderDatabaseConfig {
                 throw new RuntimeException("Failed to parse DATABASE_URL: " + dbUrl, e);
             }
         } else {
-            // Fallback for Local Development (MySQL)
+            // Fallback for Local Development (PostgreSQL)
             return DataSourceBuilder.create()
-                    .url("jdbc:mysql://localhost:3306/job_portal_db")
-                    .username("root")
-                    .password("root")
-                    .driverClassName("com.mysql.cj.jdbc.Driver")
+                    .url("jdbc:postgresql://localhost:5432/job_portal_db")
+                    .username("postgres")
+                    .password("postgres")
+                    .driverClassName("org.postgresql.Driver")
                     .build();
         }
     }
