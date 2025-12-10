@@ -22,7 +22,11 @@ public class RenderDatabaseConfig {
                 URI dbUri = new URI(dbUrl);
                 String username = dbUri.getUserInfo().split(":")[0];
                 String password = dbUri.getUserInfo().split(":")[1];
-                String dbUrlJdbc = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+                int port = dbUri.getPort();
+                if (port == -1) {
+                    port = 5432;
+                }
+                String dbUrlJdbc = "jdbc:postgresql://" + dbUri.getHost() + ':' + port + dbUri.getPath();
 
                 return DataSourceBuilder.create()
                         .url(dbUrlJdbc)
