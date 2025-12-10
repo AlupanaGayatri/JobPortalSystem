@@ -258,16 +258,21 @@
             btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
             try {
-                const response = await fetch('/api/applications/apply', {
+                const response = await fetch('/api/v1/applications', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ jobId: jobId, resumeText: "" })
+                    body: JSON.stringify({
+                        jobId: jobId,
+                        coverLetter: "Applied via Quick Apply (Web)"
+                    })
                 });
 
                 if (response.ok) {
                     btnElement.innerHTML = '<i class="fas fa-check"></i> Applied';
                     btnElement.style.color = 'green';
                 } else {
+                    const errorText = await response.text();
+                    alert("Apply Failed: " + errorText);
                     btnElement.innerText = 'Failed';
                     setTimeout(() => { btnElement.innerText = originalText; btnElement.disabled = false; }, 2000);
                 }
