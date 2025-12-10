@@ -16,6 +16,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Optional<Profile> findByUserId(Long userId);
 
     @Override
-    @CacheEvict(value = "profiles", key = "#entity.userId")
+    @CacheEvict(value = "profiles", key = "#entity.user.id")
     <S extends Profile> S save(S entity);
 }
