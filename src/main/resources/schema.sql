@@ -36,3 +36,21 @@ CREATE TABLE IF NOT EXISTS job_profile (
     expected_salary VARCHAR(255),
     desired_location VARCHAR(255)
 );
+
+-- Create Jobs Table
+CREATE TABLE IF NOT EXISTS jobs (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    company_name VARCHAR(255),
+    location VARCHAR(255),
+    salary VARCHAR(255),
+    description TEXT,
+    skills_required VARCHAR(255),
+    posted_date DATE,
+    recruiter_id BIGINT,
+    status VARCHAR(255),
+    experience_level VARCHAR(255),
+    job_type VARCHAR(255),
+    min_salary DOUBLE PRECISION,
+    max_salary DOUBLE PRECISION
+);
