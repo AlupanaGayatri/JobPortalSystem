@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS job_profile (
     resume_file VARCHAR(255),
     experience INTEGER,
     skills_count INTEGER,
-    current_role VARCHAR(255),
+    job_current_role VARCHAR(255),
     date_of_birth DATE,
     gender VARCHAR(255),
     marital_status VARCHAR(255),

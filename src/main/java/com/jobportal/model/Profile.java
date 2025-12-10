@@ -31,6 +31,7 @@ public class Profile implements Serializable {
     private Integer skillsCount;
 
     // optional: role/title user declares
+    @Column(name = "job_current_role")
     private String currentRole;
 
     // Personal Details
