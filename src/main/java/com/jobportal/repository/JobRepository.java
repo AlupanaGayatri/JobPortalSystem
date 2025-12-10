@@ -83,9 +83,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
          */
         @Query("SELECT j FROM Job j WHERE " +
                         "(:status IS NULL OR j.status = :status) AND " +
-                        "(:title IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :title, '%')) OR LOWER(j.companyName) LIKE LOWER(CONCAT('%', :title, '%'))) AND "
-                        +
-                        "(:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
+                        "(:title IS NULL OR LOWER(j.title) LIKE :title OR LOWER(j.companyName) LIKE :title) AND " +
+                        "(:location IS NULL OR LOWER(j.location) LIKE :location) AND " +
                         "(:experienceLevel IS NULL OR j.experienceLevel = :experienceLevel) AND " +
                         "(:jobType IS NULL OR j.jobType = :jobType) AND " +
                         "(:minSalary IS NULL OR j.minSalary >= :minSalary) AND " +

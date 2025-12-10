@@ -56,6 +56,21 @@ public class JobService {
             Double minSalary,
             Double maxSalary,
             org.springframework.data.domain.Pageable pageable) {
+
+        // Normalize strings for case-insensitive search to avoid database-specific
+        // lower() issues on null parameters
+        if (title != null && !title.isBlank()) {
+            title = "%" + title.toLowerCase() + "%";
+        } else {
+            title = null;
+        }
+
+        if (location != null && !location.isBlank()) {
+            location = "%" + location.toLowerCase() + "%";
+        } else {
+            location = null;
+        }
+
         return jobRepo.findByFilters(status, title, location, experienceLevel, jobType, minSalary, maxSalary, pageable);
     }
 
