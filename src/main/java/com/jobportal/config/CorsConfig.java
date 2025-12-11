@@ -20,13 +20,8 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow specific origins (configure based on your frontend URL)
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000", // React default
-                "http://localhost:4200", // Angular default
-                "http://localhost:8081", // Alternative port
-                "http://localhost:5173" // Vite default
-        ));
+        // Allow all origins using patterns (better for credentials support)
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 
         // Allow all HTTP methods
         configuration.setAllowedMethods(Arrays.asList(
