@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/profile.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
     <!-- Sidebar -->
@@ -35,6 +37,20 @@
         <a href="/logout" class="logout">
             <i class="fas fa-sign-out-alt icon"></i> Logout
         </a>
+
+        <div class="sidebar-footer"
+            style="margin-top: auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; align-items: center; gap: 10px; color: #fff;">
+                <div
+                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                    <span th:text="${#strings.substring(user.fullName,0,1)}">U</span>
+                </div>
+                <div>
+                    <div th:text="${user.fullName}" style="font-weight: 600; font-size: 14px;">User Name</div>
+                    <div style="font-size: 11px; opacity: 0.7;">Job Seeker</div>
+                </div>
+            </div>
+        </div>
     </aside>
 
     <!-- Main Content -->
@@ -66,6 +82,20 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Duration</label>
+                    <input type="text" th:field="*{duration}" placeholder="e.g., 6 months, 2 years" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-book-reader"></i> Knowledge Type</label>
+                    <select th:field="*{experienceType}" required>
+                        <option value="">Select type</option>
+                        <option value="Theoretical">Theoretical</option>
+                        <option value="Working">Working (Practical)</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="save-btn">
                     <i class="fas fa-plus"></i> Add Skill
                 </button>
@@ -79,11 +109,19 @@
                 <div th:each="skill : ${skills}" class="skill-card">
                     <div class="skill-header">
                         <span class="skill-name" th:text="${skill.name}">Skill Name</span>
-                        <span class="skill-level" 
-                              th:classappend="${skill.level == 'Advanced'} ? 'advanced' : (${skill.level == 'Intermediate'} ? 'intermediate' : 'beginner')"
-                              th:text="${skill.level}">Level</span>
+                        <div class="d-flex flex-column align-items-end gap-1">
+                            <span class="skill-level"
+                                th:classappend="${skill.level == 'Advanced'} ? 'advanced' : (${skill.level == 'Intermediate'} ? 'intermediate' : 'beginner')"
+                                th:text="${skill.level}">Level</span>
+                            <small class="text-muted" th:if="${skill.duration != null}"
+                                th:text="${skill.duration}"></small>
+                            <small class="badge bg-light text-dark border" th:if="${skill.experienceType != null}"
+                                th:text="${skill.experienceType}"></small>
+                        </div>
                     </div>
-                    <a th:href="@{'/skills/delete/' + ${skill.id}}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this skill?')" style="margin-top: 12px; display: inline-block;">
+                    <a th:href="@{'/skills/delete/' + ${skill.id}}" class="delete-btn"
+                        onclick="return confirm('Are you sure you want to delete this skill?')"
+                        style="margin-top: 12px; display: inline-block;">
                         <i class="fas fa-trash"></i> Delete
                     </a>
                 </div>
@@ -99,4 +137,5 @@
     </div>
 
 </body>
+
 </html>

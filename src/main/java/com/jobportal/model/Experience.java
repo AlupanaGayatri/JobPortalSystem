@@ -14,6 +14,8 @@ public class Experience {
     private String company;
     private String role;
     private String duration;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne

@@ -26,6 +26,7 @@ public class SkillController {
         User user = userService.findByPrincipal(principal);
         model.addAttribute("skills", skillService.getByUser(user));
         model.addAttribute("skill", new Skill()); // Add empty object for form
+        model.addAttribute("user", user);
         return "skills";
     }
 

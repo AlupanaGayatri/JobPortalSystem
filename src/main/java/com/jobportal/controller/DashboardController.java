@@ -130,42 +130,10 @@ public class DashboardController {
         }
 
         if ("RECRUITER".equals(user.getRole())) {
-            // Recruiter Dashboard Logic
-            long jobsPostedCount = jobService.getJobsByRecruiter(user.getId()).size();
-            long activeJobsCount = jobService.getJobsByRecruiter(user.getId()).stream()
-                    .filter(job -> "ACTIVE".equals(job.getStatus()))
-                    .count();
-
-            // We need to inject JobApplicationRepository to get this count efficiently
-            // For now, we'll use a placeholder or add the repository dependency
-            // Assuming we add the repository:
-            // long totalApplicants =
-            // jobApplicationRepository.countByJobRecruiterId(user.getId());
-
-            // Since we don't have the repository injected yet, let's add it to the
-            // controller fields first
-            // But we can't easily add a field in this replace block without replacing the
-            // whole class
-            // So we will rely on a separate edit to add the repository field, or use the
-            // service if available.
-            // JobApplicationService doesn't have a count method exposed yet.
-
-            // Let's stick to the plan: We will update the controller to inject the
-            // repository in a separate step if needed,
-            // or better, let's just use the service to get all applications for jobs posted
-            // by this user.
-            // But JobApplicationService.getApplicationsByJob takes a jobId.
-
-            // Let's use a workaround for now:
-            // We'll update the controller class structure in the next step to include
-            // JobApplicationRepository.
-            // For this block, we will just set the values.
-
-            model.addAttribute("jobsPostedCount", jobsPostedCount);
-            model.addAttribute("activeJobsCount", activeJobsCount);
-            // model.addAttribute("totalApplicants", totalApplicants); // Will add this
-            // after injecting repo
+            return "redirect:/recruiter/dashboard";
         }
+
+        // Logic for CANDIDATE dashboard below
 
         model.addAttribute("user", user);
         model.addAttribute("profile", profile);

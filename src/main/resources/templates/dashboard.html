@@ -3,6 +3,9 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#121212">
+    <link rel="manifest" href="/manifest.json">
     <title>User Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -11,6 +14,10 @@
 <body>
 
     <div class="container">
+        <!-- Mobile Toggle Button -->
+        <button id="mobileSidebarToggle" class="mobile-toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
 
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -61,6 +68,20 @@
             <a href="/logout" class="logout">
                 <i class="fas fa-sign-out-alt icon"></i> Logout
             </a>
+
+            <div class="sidebar-footer"
+                style="margin-top: auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; align-items: center; gap: 10px; color: #fff;">
+                    <div
+                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                        <span th:text="${#strings.substring(user.fullName,0,1)}">U</span>
+                    </div>
+                    <div>
+                        <div th:text="${user.fullName}" style="font-weight: 600; font-size: 14px;">User Name</div>
+                        <div style="font-size: 11px; opacity: 0.7;">Job Seeker</div>
+                    </div>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -194,6 +215,20 @@
 
     </div>
 
+    <script th:src="@{/js/mobile-toggle.js}"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>

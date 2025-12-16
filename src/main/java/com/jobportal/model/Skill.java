@@ -13,6 +13,8 @@ public class Skill {
 
     private String name;
     private String level;
+    private String duration; // e.g., "6 months", "2 years"
+    private String experienceType; // "Theoretical", "Working"
 
     @ManyToOne
     private User user;

@@ -3,12 +3,12 @@ package com.jobportal.config;
 import com.jobportal.model.Job;
 import com.jobportal.repository.JobRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
+// @Component
 public class DataSeeder implements CommandLineRunner {
 
         private final JobRepository jobRepository;

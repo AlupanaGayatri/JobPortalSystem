@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Settings</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="text-cream">Settings</h1>
+            <p class="text-truffle">Manage your account preferences</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="list-group bg-dark border-secondary">
+                    <a href="#"
+                        class="list-group-item list-group-item-action active bg-chocolate-dark border-secondary text-light">
+                        <i class="fas fa-user-cog me-2"></i> Account
+                    </a>
+                    <a href="#"
+                        class="list-group-item list-group-item-action bg-dark border-secondary text-truffle hover-text-light">
+                        <i class="fas fa-bell me-2"></i> Notifications
+                    </a>
+                    <a href="#"
+                        class="list-group-item list-group-item-action bg-dark border-secondary text-truffle hover-text-light">
+                        <i class="fas fa-lock me-2"></i> Privacy & Security
+                    </a>
+                    <a href="#"
+                        class="list-group-item list-group-item-action bg-dark border-secondary text-truffle hover-text-light">
+                        <i class="fas fa-credit-card me-2"></i> Billing
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="card bg-dark border-secondary mb-4">
+                    <div class="card-header border-secondary bg-transparent py-3">
+                        <h5 class="card-title text-cream mb-0">Account Settings</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/recruiter/settings/account}" method="post">
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label text-gold">Full Name</label>
+                                    <input type="text" class="form-control bg-dark text-light border-secondary"
+                                        name="fullName" th:value="${user.fullName}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-gold">Email Address</label>
+                                    <input type="email" class="form-control bg-dark text-light border-secondary"
+                                        th:value="${user.email}" readonly>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-primary">Update Account</button>
+                            </div>
+                        </form>
+
+                        <hr class="border-secondary my-4">
+
+                        <form th:action="@{/recruiter/settings/password}" method="post">
+                            <div class="mb-4">
+                                <label class="form-label text-gold mb-3">Change Password</label>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <input type="password" class="form-control bg-dark text-light border-secondary"
+                                            name="currentPassword" placeholder="Current Password" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="password" class="form-control bg-dark text-light border-secondary"
+                                            name="newPassword" placeholder="New Password" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="password" class="form-control bg-dark text-light border-secondary"
+                                            name="confirmPassword" placeholder="Confirm Password" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-outline-gold">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card bg-dark border-danger">
+                    <div class="card-body">
+                        <h5 class="text-danger mb-2">Danger Zone</h5>
+                        <p class="text-truffle mb-3">Once you delete your account, there is no going back. Please be
+                            certain.</p>
+                        <button class="btn btn-outline-danger btn-sm">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Experience - JobPortal</title>
+    <!-- Styles -->
     <link rel="stylesheet" th:href="@{/css/profile.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .ql-editor {
+            min-height: 150px;
+            background: white;
+            color: black;
+            font-size: 1rem;
+        }
+
+        .ql-toolbar {
+            background: #f8f9fa;
+        }
+    </style>
 </head>
+
 <body>
 
     <!-- Sidebar -->
@@ -35,6 +53,20 @@
         <a href="/logout" class="logout">
             <i class="fas fa-sign-out-alt icon"></i> Logout
         </a>
+
+        <div class="sidebar-footer"
+            style="margin-top: auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; align-items: center; gap: 10px; color: #fff;">
+                <div
+                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                    <span th:text="${#strings.substring(user.fullName,0,1)}">U</span>
+                </div>
+                <div>
+                    <div th:text="${user.fullName}" style="font-weight: 600; font-size: 14px;">User Name</div>
+                    <div style="font-size: 11px; opacity: 0.7;">Job Seeker</div>
+                </div>
+            </div>
+        </div>
     </aside>
 
     <!-- Main Content -->
@@ -50,7 +82,7 @@
                 <i class="fas fa-plus-circle"></i> Add Experience
             </h3>
 
-            <form th:action="@{/experience/add}" th:object="${experience}" method="post">
+            <form th:action="@{/experience/add}" th:object="${experience}" method="post" id="experienceForm">
                 <div class="form-group">
                     <label><i class="fas fa-building"></i> Company Name</label>
                     <input type="text" th:field="*{company}" placeholder="Enter company name" required>
@@ -58,17 +90,22 @@
 
                 <div class="form-group">
                     <label><i class="fas fa-user-tie"></i> Role/Position</label>
-                    <input type="text" th:field="*{role}" placeholder="e.g., Java Developer, Software Engineer" required>
+                    <input type="text" th:field="*{role}" placeholder="e.g., Java Developer, Software Engineer"
+                        required>
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-clock"></i> Duration</label>
-                    <input type="text" th:field="*{duration}" placeholder="e.g., 2020-2023, 2 years, or Jan 2020 - Present" required>
+                    <input type="text" th:field="*{duration}"
+                        placeholder="e.g., 2020-2023, 2 years, or Jan 2020 - Present" required>
                 </div>
 
                 <div class="form-group">
                     <label><i class="fas fa-file-alt"></i> Description</label>
-                    <textarea th:field="*{description}" placeholder="Describe your responsibilities, achievements, and key contributions..." rows="5"></textarea>
+                    <!-- Hidden input to store Quill content -->
+                    <input type="hidden" th:field="*{description}" id="descriptionInput">
+                    <!-- Quill Editor Container -->
+                    <div id="editor-container"></div>
                 </div>
 
                 <button type="submit" class="save-btn">
@@ -87,11 +124,13 @@
                             <h4 th:text="${exp.role}">Job Title</h4>
                             <p><i class="fas fa-building"></i> <span th:text="${exp.company}">Company</span></p>
                             <p><i class="fas fa-clock"></i> <span th:text="${exp.duration}">Duration</span></p>
-                            <p th:if="${exp.description != null and !exp.description.isEmpty()}" style="margin-top: 12px; color: #4a5568; line-height: 1.6;">
-                                <i class="fas fa-file-alt"></i> <span th:text="${exp.description}">Description</span>
-                            </p>
+                            <div th:if="${exp.description != null and !exp.description.isEmpty()}"
+                                style="margin-top: 12px; color: #4a5568; line-height: 1.6;">
+                                <div th:utext="${exp.description}">Description</div>
+                            </div>
                         </div>
-                        <a th:href="@{'/experience/delete/' + ${exp.id}}" class="delete-btn" onclick="return confirm('Are you sure you want to delete this experience?')">
+                        <a th:href="@{'/experience/delete/' + ${exp.id}}" class="delete-btn"
+                            onclick="return confirm('Are you sure you want to delete this experience?')">
                             <i class="fas fa-trash"></i> Delete
                         </a>
                     </div>
@@ -107,5 +146,31 @@
         </div>
     </div>
 
-</body>
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            placeholder: 'Describe your responsibilities, achievements, and key contributions...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+                    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                    ['clean']                                         // remove formatting button
+                ]
+            }
+        });
+
+        var form = document.querySelector('#experienceForm');
+        form.onsubmit = function () {
+            // Populate hidden input with HTML content
+            var description = document.querySelector('#descriptionInput');
+            description.value = quill.root.innerHTML;
+        };
+    </script>
+
 </html>

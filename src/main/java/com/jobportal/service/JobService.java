@@ -2,6 +2,8 @@ package com.jobportal.service;
 
 import com.jobportal.model.Job;
 import com.jobportal.repository.JobRepository;
+import com.jobportal.repository.JobApplicationRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,13 +12,19 @@ import java.util.List;
 @Service
 public class JobService {
     private final JobRepository jobRepo;
+    private final JobApplicationRepository jobApplicationRepo;
 
-    public JobService(JobRepository jobRepo) {
+    public JobService(JobRepository jobRepo, JobApplicationRepository jobApplicationRepo) {
         this.jobRepo = jobRepo;
+        this.jobApplicationRepo = jobApplicationRepo;
     }
 
     public Job postJob(Job job) {
         job.setPostedDate(LocalDate.now());
+        return jobRepo.save(job);
+    }
+
+    public Job saveJob(Job job) {
         return jobRepo.save(job);
     }
 
@@ -32,9 +40,14 @@ public class JobService {
         }).orElse(null);
     }
 
+    @Transactional
     public boolean deleteJob(Long id) {
         if (!jobRepo.existsById(id))
             return false;
+
+        // Delete associated applications first
+        jobApplicationRepo.deleteByJobId(id);
+
         jobRepo.deleteById(id);
         return true;
     }

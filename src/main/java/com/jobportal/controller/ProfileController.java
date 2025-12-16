@@ -152,20 +152,4 @@ public class ProfileController {
         return "profile-view";
     }
 
-    // serve file links (resume / photo) - simple implementation
-    @GetMapping("/uploads/{filename:.+}")
-    @ResponseBody
-    public org.springframework.core.io.Resource serveFile(@PathVariable String filename) {
-        try {
-            Path file = UPLOAD_DIR.resolve(filename);
-            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read file: " + filename);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("File error: " + e.getMessage());
-        }
-    }
 }

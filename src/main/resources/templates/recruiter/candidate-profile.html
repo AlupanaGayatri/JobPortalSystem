@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Candidate Profile</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!-- Back Button -->
+        <div class="mb-4">
+            <a href="javascript:history.back()" class="text-gold text-decoration-none mb-2 d-inline-block">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <h2 class="text-cream" th:text="${candidate.fullName}">Candidate Name</h2>
+            <p class="text-truffle" th:text="${profile.headline}">Headline</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: Key Info -->
+            <div class="col-lg-4">
+                <div class="form-card text-center p-4">
+                    <div class="avatar-placeholder bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                        style="width: 100px; height: 100px; font-size: 2.5rem;">
+                        <span th:text="${#strings.substring(candidate.fullName, 0, 1)}">A</span>
+                    </div>
+                    <h4 class="text-cream mb-1" th:text="${candidate.fullName}">Name</h4>
+                    <p class="text-truffle mb-3" th:text="${profile.currentRole}">Current Role</p>
+
+                    <div class="d-grid gap-2 mb-4">
+                        <a th:if="${profile.resumeFile != null}" th:href="@{'/uploads/' + ${profile.resumeFile}}"
+                            target="_blank" class="btn btn-primary"><i class="fas fa-download me-2"></i> Download
+                            Resume</a>
+                        <a th:href="'https://mail.google.com/mail/?view=cm&fs=1&to=' + ${candidate.email}"
+                            target="_blank" class="btn btn-outline-gold"><i class="fas fa-envelope me-2"></i> Send
+                            Message</a>
+                    </div>
+
+                    <div class="text-start border-top border-secondary pt-3 mt-3">
+                        <p class="mb-2"><i class="fas fa-envelope me-2 text-gold"></i> <span
+                                th:text="${candidate.email}">email</span></p>
+                        <p class="mb-2"><i class="fas fa-phone me-2 text-gold"></i> <span
+                                th:text="${profile.phone}">phone</span></p>
+                        <p class="mb-2"><i class="fas fa-map-marker-alt me-2 text-gold"></i> <span
+                                th:text="${profile.address}">location</span></p>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <a th:if="${profile.linkedinUrl}" th:href="${profile.linkedinUrl}" target="_blank"
+                            class="text-gold fa-lg"><i class="fab fa-linkedin"></i></a>
+                        <a th:if="${profile.githubUrl}" th:href="${profile.githubUrl}" target="_blank"
+                            class="text-gold fa-lg"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <div class="form-card mt-4 p-4">
+                    <h5 class="text-gold mb-3">Skills</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <!-- Placeholder skills until we have a real skills list in Profile model -->
+                        <span class="badge bg-secondary">Java</span>
+                        <span class="badge bg-secondary">Spring Boot</span>
+                        <span class="badge bg-secondary">SQL</span>
+                        <span class="badge bg-secondary" th:if="${profile.skillsCount != null}"
+                            th:text="'+ ' + ${profile.skillsCount} + ' more'">+ 3 more</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Details -->
+            <div class="col-lg-8">
+                <div class="form-card p-4 mb-4">
+                    <h5 class="text-gold mb-3"><i class="fas fa-user mb-2 me-2"></i> About</h5>
+                    <p class="text-light" th:text="${profile.summary}">No summary provided.</p>
+                </div>
+
+                <div class="form-card p-4 mb-4">
+                    <h5 class="text-gold mb-3"><i class="fas fa-briefcase mb-2 me-2"></i> Experience</h5>
+                    <div class="text-light">
+                        <p class="mb-3" th:if="${profile.experience != null}"
+                            th:text="${profile.experience} + ' Years of Experience'"></p>
+
+                        <div th:each="exp : ${experienceList}" class="mb-3 border-bottom border-secondary pb-2">
+                            <h6 class="text-white mb-1" th:text="${exp.role}">Role</h6>
+                            <p class="text-gold mb-1 small" th:text="${exp.company} + ' | ' + ${exp.duration}">Company |
+                                Duration</p>
+                            <div class="text-muted small mb-0" th:utext="${exp.description}">Desc</div>
+                        </div>
+                        <p th:if="${#lists.isEmpty(experienceList)}" class="text-muted">No detailed experience added.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-card p-4">
+                    <h5 class="text-gold mb-3"><i class="fas fa-graduation-cap mb-2 me-2"></i> Education</h5>
+                    <div class="text-light">
+                        <div th:each="edu : ${educationList}"
+                            class="d-flex gap-3 mb-3 border-bottom border-secondary pb-3">
+                            <div class="flex-shrink-0">
+                                <div class="bg-dark-subtle rounded-circle d-flex align-items-center justify-content-center border border-secondary"
+                                    style="width: 48px; height: 48px;">
+                                    <i class="fas fa-university text-gold"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="text-white mb-1" th:text="${edu.institution}">Institution</h6>
+                                    <span class="badge bg-gold-subtle text-gold"
+                                        th:text="${edu.startYear} + ' - ' + ${edu.endYear}">2020 - 2024</span>
+                                </div>
+                                <p class="text-cream mb-1 small">
+                                    <span th:text="${edu.course}">Course</span>
+                                    <span th:if="${edu.branch != null}" th:text="' • ' + ${edu.branch}"> • Branch</span>
+                                </p>
+                            </div>
+                        </div>
+                        <p th:if="${#lists.isEmpty(educationList)}" class="text-muted text-center py-3">
+                            <i class="fas fa-graduation-cap mb-2 d-block"></i> No education details added.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Email Modal -->
+        <div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark border-gold">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title text-gold">Send Message</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/recruiter/send-email}" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" name="to" th:value="${candidate.email}">
+                            <div class="mb-3">
+                                <label class="form-label text-light">To</label>
+                                <input type="text" class="form-control" th:value="${candidate.email}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-light">Subject</label>
+                                <input type="text" name="subject" class="form-control"
+                                    placeholder="Interview Invitation" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-light">Message</label>
+                                <textarea name="message" class="form-control" rows="5" required>Hi [Candidate Name],
+
+We reviewed your profile and would like to invite you for an interview.
+
+Best regards,
+[Your Name]</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-secondary">
+                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-gold">Send Email</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

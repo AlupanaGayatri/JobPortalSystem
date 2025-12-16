@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Recruiter Profile</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="text-cream">Recruiter Profile</h1>
+            <p class="text-truffle">Manage your professional details</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${success}">Profile updated successfully!</span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger"
+            style="background-color: #fce8e6; color: #c0392b; border: 1px solid #fadbd8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${error}">Error updating profile</span>
+        </div>
+
+        <div class="form-card">
+            <form th:action="@{/recruiter/profile}" method="post" th:object="${profile}" enctype="multipart/form-data">
+                <!-- Hidden inputs -->
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="fullName" class="text-gold mb-1">Full Name</label>
+                            <input type="text" id="fullName" class="form-control" th:value="${user.fullName}" disabled
+                                style="background-color: rgba(255,255,255,0.05); cursor: not-allowed; color: var(--cream);">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="email" class="text-gold mb-1">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control text-light"
+                                th:value="${user.email}" placeholder="name@company.com" required
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="headline" class="text-gold mb-1">Professional Headline</label>
+                            <input type="text" id="headline" th:field="*{headline}" class="form-control text-light"
+                                placeholder="e.g. Senior Technical Recruiter at TechCorp"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="currentRole" class="text-gold mb-1">Current Role / Title</label>
+                            <input type="text" id="currentRole" th:field="*{currentRole}"
+                                class="form-control text-light" placeholder="e.g. Talent Acquisition Manager"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="currentIndustry" class="text-gold mb-1">Industry</label>
+                            <input type="text" id="currentIndustry" th:field="*{currentIndustry}"
+                                class="form-control text-light" placeholder="e.g. Information Technology, Healthcare"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="phone" class="text-gold mb-1">Phone Number</label>
+                            <input type="tel" id="phone" th:field="*{phone}" class="form-control text-light"
+                                placeholder="+1 (555) 000-0000"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="address" class="text-gold mb-1">Office Location</label>
+                            <input type="text" id="address" th:field="*{address}" class="form-control text-light"
+                                placeholder="City, Country"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="linkedinUrl" class="text-gold mb-1">LinkedIn Profile URL</label>
+                            <input type="url" id="linkedinUrl" th:field="*{linkedinUrl}" class="form-control text-light"
+                                placeholder="https://linkedin.com/in/yourprofile"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="summary" class="text-gold mb-1">Bio / Company Summary</label>
+                            <textarea id="summary" th:field="*{summary}" class="form-control text-light" rows="5"
+                                placeholder="Tell candidates about yourself and your company..."
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-4">
+                            <label for="profilePhotoFile" class="text-gold mb-1">Profile Photo</label>
+                            <input type="file" id="profilePhotoFile" name="profilePhotoFile"
+                                class="form-control text-light" accept="image/*"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                            <small class="text-truffle" th:if="${profile.profilePhoto}">Current: <span
+                                    th:text="${profile.profilePhoto}"></span></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-5">
+                        <i class="fas fa-save me-2"></i> Save Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

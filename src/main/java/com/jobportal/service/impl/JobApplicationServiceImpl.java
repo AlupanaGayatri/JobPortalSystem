@@ -53,24 +53,22 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         JobApplication savedApp = jobApplicationRepository.save(application);
 
         // Send email notification
-        String subject = "Application Received: " + job.getTitle();
-        String body = "Dear " + user.getFullName() + ",\n\n" +
-                "You have successfully applied for the position of " + job.getTitle() + " at " + job.getCompanyName()
-                + ".\n" +
-                "Application ID: " + savedApp.getId() + "\n\n" +
-                "Best regards,\nJob Portal Team";
+        try {
+            String subject = "Application Received: " + job.getTitle();
+            String body = "Dear " + user.getFullName() + ",\n\n" +
+                    "You have successfully applied for the position of " + job.getTitle() + " at "
+                    + job.getCompanyName()
+                    + ".\n" +
+                    "Application ID: " + savedApp.getId() + "\n\n" +
+                    "Best regards,\nJob Portal Team";
 
-        // Assuming user has an email field, if not we might need to skip or use
-        // username if it's an email
-        // For now, let's try to send to username if it looks like an email, or just log
-        // it.
-        // The User model usually has email. Let's check User model later if needed, but
-        // for now assuming username or adding email check.
-        // Wait, User model has 'email' field? I should check.
-        // I'll use user.getEmail() if it exists, otherwise username.
-        String emailTo = user.getEmail();
-        if (emailTo != null && !emailTo.isEmpty()) {
-            emailService.sendSimpleMessage(emailTo, subject, body);
+            String emailTo = user.getEmail();
+            if (emailTo != null && !emailTo.isEmpty()) {
+                emailService.sendSimpleMessage(emailTo, subject, body);
+            }
+        } catch (Exception e) {
+            // Log but don't fail the application if email fails
+            System.err.println("Failed to send application confirmation email: " + e.getMessage());
         }
 
         return savedApp;
@@ -136,5 +134,23 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @org.springframework.transaction.annotation.Transactional
     public void deleteAllApplications(Long userId) {
         jobApplicationRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public long countApplicationsByRecruiter(Long recruiterId) {
+        return jobApplicationRepository.countByJobRecruiterId(recruiterId);
+    }
+
+    @Override
+    public List<JobApplication> getApplicationsByRecruiter(Long recruiterId) {
+        return jobApplicationRepository.findByJobRecruiterId(recruiterId);
+    }
+
+    @Override
+    public void updateStatus(Long applicationId, String status) {
+        JobApplication app = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Application not found with id: " + applicationId));
+        app.setStatus(status);
+        jobApplicationRepository.save(app);
     }
 }

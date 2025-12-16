@@ -1,24 +1,30 @@
 :root {
-    /* Default: Chocolate Truffle Palette */
-    --primary: #38240D;
-    /* Dark Chocolate */
-    --primary-hover: #533513;
-    --accent: #C05800;
-    /* Caramel */
-    --accent-hover: #984400;
-    --text-dark: #38240D;
-    --text-body: #4A3B32;
-    --text-gray: #8C7B70;
-    --bg-light: #FDFBD4;
-    /* Cream */
-    --bg-white: #FFFFFF;
-    --border-color: #D1C7BD;
+    /* Old Photograph (Vintage) Palette - High Contrast */
+    --primary: #2C2C1A;
+    /* Deep Olive */
+    --primary-hover: #1A1A10;
+    --accent: #4E4E30;
+    /* Dark Olive Accent */
+    --accent-hover: #2C2C1A;
+    --text-dark: #1A1A10;
+    --text-body: #2C2C1A;
+    --text-gray: #4E4E30;
+    --bg-light: #F2F0D8;
+    /* Muted Vintage Cream */
+    --bg-white: #FFFFF2;
+    /* Off-white */
+    --border-color: #C5C5A8;
+    /* Dark Beige */
 
     /* Functional Colors */
-    --success: #2E7D32;
-    --error: #D32F2F;
-    --warning: #ED6C02;
-    --info: #0288D1;
+    --success: #556B2F;
+    /* Dark Olive Green */
+    --error: #800000;
+    /* Maroon */
+    --warning: #B8860B;
+    /* Dark Goldenrod */
+    --info: #4682B4;
+    /* Steel Blue */
 }
 
 /* Theme: Ocean Breeze */

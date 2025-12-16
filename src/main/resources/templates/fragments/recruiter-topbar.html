@@ -1,0 +1,68 @@
+<div th:fragment="topbar" class="recruiter-topbar">
+    <div class="topbar-left d-flex align-items-center">
+        <!-- Hamburger Menu (Mobile Only) -->
+        <button id="sidebarToggle" class="btn btn-link text-gold d-md-none p-0 me-3">
+            <i class="fas fa-bars fa-lg"></i>
+        </button>
+
+        <div class="global-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search candidates, jobs..." class="search-input">
+        </div>
+    </div>
+
+    <div class="topbar-right">
+        <a href="/post-job" class="btn btn-primary btn-sm d-none d-md-flex align-items-center gap-2">
+            <i class="fas fa-plus"></i> Post Job
+        </a>
+
+        <!-- Shortcuts -->
+        <div class="topbar-item" title="Saved Searches">
+            <i class="fas fa-star"></i>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dropdown topbar-item">
+            <button class="btn-icon" id="quickActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-plus-circle"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="quickActionsDropdown">
+                <li><a class="dropdown-item" href="/post-job"><i class="fas fa-briefcase"></i> Post Job</a></li>
+                <li><a class="dropdown-item" href="/recruiter/candidates/search"><i class="fas fa-search"></i> New
+                        Search</a></li>
+                <li><a class="dropdown-item" href="/recruiter/candidates/add"><i class="fas fa-user-plus"></i> Add
+                        Candidate</a></li>
+            </ul>
+        </div>
+
+        <!-- Notifications -->
+        <div class="topbar-item notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+        </div>
+
+        <!-- Recruiter Profile -->
+        <div class="dropdown user-profile">
+            <div class="avatar-container dropdown-toggle" data-bs-toggle="dropdown">
+                <div class="avatar-placeholder">
+                    <span th:text="${#strings.substring(user.fullName, 0, 1)}">U</span>
+                </div>
+                <span class="user-name ms-2" th:text="${user.fullName}">Recruiter</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="/recruiter/profile"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a class="dropdown-item" href="/recruiter/settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i>
+                            Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

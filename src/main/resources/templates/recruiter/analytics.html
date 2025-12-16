@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Analytics</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="text-cream">Analytics & Reports</h1>
+            <p class="text-white-50">Insights into your recruitment performance</p>
+        </div>
+
+        <!-- Top Stats Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card p-4 rounded-3 bg-dark border border-secondary">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white-50 text-uppercase fw-bold small">Time to Hire</span>
+                            <h3 class="text-cream mb-0 mt-1"><span th:text="${timeToHire}">0</span> Days</h3>
+                        </div>
+                        <div class="icon-box bg-gold-subtle rounded-circle p-2">
+                            <i class="fas fa-stopwatch text-gold"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card p-4 rounded-3 bg-dark border border-secondary">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white-50 text-uppercase fw-bold small">Offer Acceptance</span>
+                            <h3 class="text-cream mb-0 mt-1"><span th:text="${offerAcceptance}">0</span>%</h3>
+                        </div>
+                        <div class="icon-box bg-gold-subtle rounded-circle p-2">
+                            <i class="fas fa-handshake text-gold"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card p-4 rounded-3 bg-dark border border-secondary">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white-50 text-uppercase fw-bold small">Total Hires</span>
+                            <h3 class="text-cream mb-0 mt-1" th:text="${totalHires}">0</h3>
+                        </div>
+                        <div class="icon-box bg-gold-subtle rounded-circle p-2">
+                            <i class="fas fa-user-check text-gold"></i>
+                        </div>
+                    </div>
+                    <small class="text-white-50">Total Hired Candidates</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card p-4 rounded-3 bg-dark border border-secondary">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white-50 text-uppercase fw-bold small">Active Pipelines</span>
+                            <h3 class="text-cream mb-0 mt-1" th:text="${activePipelines}">0</h3>
+                        </div>
+                        <div class="icon-box bg-gold-subtle rounded-circle p-2">
+                            <i class="fas fa-project-diagram text-gold"></i>
+                        </div>
+                    </div>
+                    <small class="text-white-50">Jobs with Active Candidates</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Chart Placeholder 1 -->
+            <div class="col-md-8">
+                <div class="card bg-dark border-secondary h-100">
+                    <div class="card-header border-secondary bg-transparent py-3">
+                        <h5 class="card-title text-cream mb-0">Applications Overview</h5>
+                    </div>
+                    <div class="card-body p-4" style="height: 300px;">
+                        <canvas id="applicationsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Source Stats -->
+            <div class="col-md-4">
+                <div class="card bg-dark border-secondary h-100">
+                    <div class="card-header border-secondary bg-transparent py-3">
+                        <h5 class="card-title text-cream mb-0">Candidate Sources</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-cream mb-1">
+                                <span>LinkedIn</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="progress bg-secondary" style="height: 6px;">
+                                <div class="progress-bar bg-gold" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-cream mb-1">
+                                <span>Career Page</span>
+                                <span>30%</span>
+                            </div>
+                            <div class="progress bg-secondary" style="height: 6px;">
+                                <div class="progress-bar bg-gold" style="width: 30%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-cream mb-1">
+                                <span>Referrals</span>
+                                <span>15%</span>
+                            </div>
+                            <div class="progress bg-secondary" style="height: 6px;">
+                                <div class="progress-bar bg-gold" style="width: 15%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="d-flex justify-content-between text-cream mb-1">
+                                <span>Other</span>
+                                <span>10%</span>
+                            </div>
+                            <div class="progress bg-secondary" style="height: 6px;">
+                                <div class="progress-bar bg-gold" style="width: 10%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('applicationsChart').getContext('2d');
+
+            // Mock data for the last 6 months - in real app, punch this in from backend
+            const labels = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const data = [12, 19, 15, 25, 22, 30]; // Rising trend example
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'New Applications',
+                        data: data,
+                        borderColor: '#d4af37', // Gold
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#d4af37'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#aaa'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#aaa'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Applications</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!-- Back and Title -->
+        <div class="mb-4">
+            <a href="/recruiter/jobs" class="text-gold text-decoration-none mb-2 d-inline-block">
+                <i class="fas fa-arrow-left"></i> Back to Jobs
+            </a>
+            <div class="d-flex justify-content-between align-items-end">
+                <div>
+                    <h2 class="text-cream mb-1">Applications</h2>
+                    <p class="text-truffle mb-0">For <strong th:text="${job.title}" class="text-white">Job
+                            Title</strong></p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-light"><i class="fas fa-download me-2"></i> Export CSV</button>
+                    <button class="btn btn-outline-light"><i class="fas fa-filter me-2"></i> Filter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban-ish / List View -->
+        <div class="row g-4">
+            <div class="col-12">
+                <div th:each="app : ${applications}" class="candidate-card form-card mb-3 p-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex gap-3">
+                            <div class="avatar-placeholder bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                <span th:text="${#strings.substring(app.user.fullName, 0, 1)}">A</span>
+                            </div>
+                            <div>
+                                <h5 class="text-cream mb-1" th:text="${app.user.fullName}">Candidate Name</h5>
+                                <p class="text-truffle mb-1">
+                                    <i class="fas fa-map-marker-alt me-1"></i> <span
+                                        th:text="${app.user.email}">Location</span> •
+                                    <i class="fas fa-clock me-1"></i> Applied <span
+                                        th:text="${app.appliedDate}">Date</span>
+                                </p>
+                                <div class="d-flex gap-2 mt-2">
+                                    <span class="badge bg-info text-dark">Java</span>
+                                    <span class="badge bg-info text-dark">Spring Boot</span>
+                                    <span class="badge bg-secondary"
+                                        th:text="${app.user.profile != null && app.user.profile.experience != null ? app.user.profile.experience + ' Years Exp' : 'Fresher'}">Fresher</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="mb-2">
+                                <span class="badge bg-warning text-dark" th:text="${app.status}">PENDING</span>
+                            </div>
+                            <div class="btn-group">
+                                <a th:href="@{/recruiter/candidates/profile/{userId}(userId=${app.user.id})}"
+                                    class="btn btn-sm btn-outline-light">View Profile</a>
+                                <a th:href="@{/recruiter/applications/{id}/status(id=${app.id}, status='SHORTLISTED')}"
+                                    class="btn btn-sm btn-primary">Shortlist</a>
+                                <a th:href="@{/recruiter/applications/{id}/status(id=${app.id}, status='REJECTED')}"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Reject this application?');"><i
+                                        class="fas fa-times"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Resume Preview -->
+                    <div class="mt-3 p-3 rounded" style="background-color: rgba(0,0,0,0.2);">
+                        <h6 class="text-gold text-uppercase small mb-2">Resume Summary</h6>
+                        <p class="text-light small mb-0" th:text="${app.resumeText}">Resume content...</p>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(applications)}" class="text-center p-5">
+                    <div class="text-muted">
+                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                        <p>No applications received yet for this position.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

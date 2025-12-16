@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Messages</title>
+</head>
+
+<body>
+    <div layout:fragment="content" class="h-100 d-flex flex-column">
+        <div class="page-header mb-4">
+            <h1 class="text-cream">Messages</h1>
+            <p class="text-white-50">Communicate with your candidates</p>
+        </div>
+
+        <div class="card flex-grow-1 overflow-hidden" style="height: 600px;">
+            <div class="row g-0 h-100">
+                <!-- Chat List -->
+                <div id="candidatesList" class="col-md-4 col-12 d-flex flex-column h-100"
+                    th:classappend="${selectedCandidate != null ? 'd-none d-md-flex' : ''}"
+                    style="border-right: 1px solid rgba(255,255,255,0.1);">
+                    <div class="p-3" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <input type="text" class="form-control text-light"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);"
+                            placeholder="Search candidates...">
+                    </div>
+                    <div class="overflow-auto flex-grow-1">
+                        <!-- Real Candidates List -->
+                        <div th:each="candidate : ${candidates}" class="p-3 cursor-pointer hover-glass"
+                            th:onclick="'window.location.href=\'/recruiter/messages?candidateId=' + ${candidate.id} + '\''"
+                            th:style="${selectedCandidate != null and selectedCandidate.id == candidate.id} ? 'border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.1);' : 'border-bottom: 1px solid rgba(255,255,255,0.1);'">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="avatar-placeholder rounded-circle bg-gold text-dark fw-bold d-flex align-items-center justify-content-center"
+                                    style="width: 40px; height: 40px;">
+                                    <span th:text="${#strings.substring(candidate.fullName, 0, 1)}">A</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-cream" th:text="${candidate.fullName}">Name</div>
+                                    <small class="text-white-50 text-truncate d-block" style="max-width: 150px;">
+                                        <i class="fas fa-envelope fa-xs"></i> <span
+                                            th:text="${candidate.email}">email</span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div th:if="${#lists.isEmpty(candidates)}" class="p-4 text-center text-muted">
+                            <i class="fas fa-users mb-2"></i><br>
+                            No candidates found.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Area (Email Composer) -->
+                <div id="chatArea" class="col-md-8 col-12 d-flex flex-column h-100"
+                    th:classappend="${selectedCandidate == null ? 'd-none d-md-flex' : ''}">
+
+                    <!-- State: No Candidate Selected -->
+                    <div th:if="${selectedCandidate == null}"
+                        class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                        <i class="fas fa-comments fa-3x mb-3 text-gold opacity-50"></i>
+                        <h5>Select a candidate to send a message</h5>
+                    </div>
+
+                    <!-- State: Candidate Selected -->
+                    <div th:if="${selectedCandidate != null}" class="d-flex flex-column h-100">
+                        <!-- Header -->
+                        <div class="p-3 d-flex align-items-center justify-content-between"
+                            style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="/recruiter/messages" class="btn btn-link text-gold d-md-none p-0 me-2">
+                                    <i class="fas fa-arrow-left"></i>
+                                </a>
+                                <div class="avatar-placeholder rounded-circle bg-gold text-dark fw-bold d-flex align-items-center justify-content-center"
+                                    style="width: 40px; height: 40px;">
+                                    <span th:text="${#strings.substring(selectedCandidate.fullName, 0, 1)}">A</span>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-cream" th:text="'Messaging: ' + ${selectedCandidate.fullName}">
+                                        John Doe</h6>
+                                    <small class="text-gold"
+                                        th:text="${selectedCandidate.email}">email@example.com</small>
+                                </div>
+                            </div>
+                            <a th:href="@{'/recruiter/candidates/profile/' + ${selectedCandidate.id}}"
+                                class="btn btn-outline-light btn-sm">View Profile</a>
+                        </div>
+
+                        <!-- Email Form Area -->
+                        <div class="flex-grow-1 p-4 overflow-auto">
+                            <div class="alert alert-info bg-dark border-gold text-white" role="alert">
+                                <i class="fas fa-info-circle me-2"></i> Sends an email directly to the candidate via
+                                your configured Gmail.
+                            </div>
+
+                            <form th:action="@{/recruiter/send-email}" method="post" class="h-100 d-flex flex-column">
+                                <input type="hidden" name="to" th:value="${selectedCandidate.email}">
+                                <input type="hidden" name="sourcePage" value="messages">
+
+                                <div class="mb-3">
+                                    <label class="form-label text-gold">Subject</label>
+                                    <input type="text" name="subject" class="form-control text-light"
+                                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);"
+                                        placeholder="e.g., Interview Invitation" required>
+                                </div>
+
+                                <div class="mb-3 flex-grow-1 d-flex flex-column">
+                                    <label class="form-label text-gold">Message</label>
+                                    <textarea name="message" class="form-control text-light flex-grow-1"
+                                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); resize: none;"
+                                        required>Hi [Candidate Name],
+
+We would like to discuss your application...</textarea>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-gold btn-lg"><i
+                                            class="fas fa-paper-plane me-2"></i> Send Email</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

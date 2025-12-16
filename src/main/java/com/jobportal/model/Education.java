@@ -13,6 +13,7 @@ public class Education {
 
     private String institution;
     private String course;
+    private String branch;
     private String startYear;
     private String endYear;
 

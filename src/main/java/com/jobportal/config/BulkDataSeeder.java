@@ -5,7 +5,7 @@ import com.jobportal.model.Job;
 import com.jobportal.repository.JobApplicationRepository;
 import com.jobportal.repository.JobRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-@Component
+// @Component
 public class BulkDataSeeder implements CommandLineRunner {
 
     private final JobApplicationRepository jobApplicationRepository;

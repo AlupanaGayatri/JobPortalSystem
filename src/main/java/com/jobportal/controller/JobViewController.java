@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
@@ -73,7 +74,8 @@ public class JobViewController {
     }
 
     @PostMapping("/post-job")
-    public String handlePostJob(com.jobportal.model.Job job, Principal principal, Model model) {
+    public String handlePostJob(com.jobportal.model.Job job, Principal principal,
+            RedirectAttributes redirectAttributes) {
         if (principal != null) {
             User user = userService.findByPrincipal(principal);
             // Ensure user is recruiter
@@ -83,15 +85,14 @@ public class JobViewController {
 
             // Set status to ACTIVE by default
             job.setStatus("ACTIVE");
-            // In a real app, we would associate the job with the recruiter here
-            // job.setRecruiter(user);
+
+            // Associate the job with the recruiter
+            job.setRecruiterId(user.getId());
 
             jobService.postJob(job);
 
-            model.addAttribute("user", user);
-            model.addAttribute("success", true);
-            model.addAttribute("job", new com.jobportal.model.Job());
-            return "post-job";
+            redirectAttributes.addFlashAttribute("success", "Job posted successfully!");
+            return "redirect:/recruiter/jobs";
         }
         return "redirect:/login";
     }

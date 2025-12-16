@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>My Jobs</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="text-cream mb-1">My Jobs</h2>
+                <p class="text-truffle">Manage your posted positions</p>
+            </div>
+            <div class="d-flex gap-2">
+                <input type="text" class="form-control text-light" placeholder="Search jobs..."
+                    style="width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <select class="form-select text-light"
+                    style="width: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                    <option>All Status</option>
+                    <option>Active</option>
+                    <option>Closed</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-card p-0">
+            <div class="table-responsive" style="overflow-y: visible;">
+                <table class="table table-hover mb-0" style="background-color: transparent;">
+                    <thead>
+                        <tr style="background-color: rgba(255,255,255,0.05);">
+                            <th class="p-3 text-gold">Job Title</th>
+                            <th class="p-3 text-gold">Location</th>
+                            <th class="p-3 text-gold">Posted Date</th>
+                            <th class="p-3 text-gold">Status</th>
+                            <th class="p-3 text-gold text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="job : ${jobs}">
+                            <td class="p-3 align-middle">
+                                <h6 class="text-cream mb-1" th:text="${job.title}">Senior Developer</h6>
+                                <span class="badge bg-secondary" th:text="${job.jobType}">Full Time</span>
+                            </td>
+                            <td class="p-3 align-middle text-truffle" th:text="${job.location}">New York, NY</td>
+                            <td class="p-3 align-middle text-truffle" th:text="${job.postedDate}">2023-10-01</td>
+                            <td class="p-3 align-middle">
+                                <span class="badge"
+                                    th:classappend="${job.status == 'ACTIVE' ? 'bg-success' : 'bg-secondary'}"
+                                    th:text="${job.status}">ACTIVE</span>
+                            </td>
+                            <td class="p-3 align-middle text-end">
+                                <a th:href="@{/recruiter/jobs/{id}/applications(id=${job.id})}"
+                                    class="btn btn-sm btn-outline-light me-1">
+                                    <i class="fas fa-users"></i> Applicants
+                                </a>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i> Edit</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-pause me-2"></i>
+                                                Pause</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger"
+                                                th:href="@{/recruiter/jobs/delete/{id}(id=${job.id})}"
+                                                onclick="return confirm('Are you sure you want to delete this job?');"><i
+                                                    class="fas fa-trash me-2"></i> Delete Job</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(jobs)}">
+                            <td colspan="5" class="text-center p-5 text-muted">
+                                <i class="fas fa-folder-open fa-3x mb-3"></i>
+                                <p>No jobs posted yet.</p>
+                                <a href="/post-job" class="btn btn-primary btn-sm">Post Your First Job</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

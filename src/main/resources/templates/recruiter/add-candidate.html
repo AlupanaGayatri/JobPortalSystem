@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
+
+<head>
+    <title>Add Candidate</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="text-cream">Add Candidate</h1>
+            <p class="text-truffle">Manually add a candidate to your talent pool</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-body p-4">
+                        <form th:action="@{/recruiter/candidates/add}" method="post">
+                            <div class="mb-4 text-center">
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3"
+                                    style="width: 80px; height: 80px;">
+                                    <i class="fas fa-user-plus fs-2 text-light"></i>
+                                </div>
+                                <h5 class="text-cream">Candidate Details</h5>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-gold">First Name</label>
+                                    <input type="text" name="firstName"
+                                        class="form-control bg-dark text-light border-secondary" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-gold">Last Name</label>
+                                    <input type="text" name="lastName"
+                                        class="form-control bg-dark text-light border-secondary" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-gold">Email Address</label>
+                                    <input type="email" name="email"
+                                        class="form-control bg-dark text-light border-secondary" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-gold">Resume</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control bg-dark text-light border-secondary"
+                                            id="resumeUpload">
+                                        <label class="input-group-text bg-secondary border-secondary text-light"
+                                            for="resumeUpload">Upload</label>
+                                    </div>
+                                    <small class="text-muted">Supports PDF, DOCX (Max 5MB)</small>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">Add Candidate</button>
+                                <a href="/recruiter/candidates" class="btn btn-outline-light">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

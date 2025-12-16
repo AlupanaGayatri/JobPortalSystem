@@ -48,29 +48,31 @@
 
     <script>
         function getProgressWidth(status) {
-            if (status === 'PENDING') return '15%'; // Just started
-            if (status === 'REVIEWED') return '40%';
-            if (status === 'INTERVIEW') return '65%';
+            if (status === 'PENDING' || status === 'APPLIED') return '15%';
+            if (status === 'REVIEWED') return '65%'; // Jump to Viewed
+            if (status === 'SHORTLISTED') return '100%';
+            if (status === 'INTERVIEW') return '100%';
             if (status === 'OFFERED' || status === 'HIRED') return '100%';
-            if (status === 'REJECTED' || status === 'WITHDRAWN') return '100%'; // Full line but maybe red?
+            if (status === 'REJECTED' || status === 'WITHDRAWN') return '100%';
             return '0%';
         }
 
         function renderTimeline(status) {
             let s1 = '', s2 = '', s3 = '', s4 = '';
-            let width = '0%';
+            let width = '12%';
 
-            if (status === 'PENDING') {
-                s1 = 'active'; width = '12%';
+            // Common aliases
+            if (status === 'PENDING') status = 'APPLIED';
+
+            if (status === 'APPLIED') {
+                s1 = 'completed'; s2 = 'active'; width = '38%'; // Applied & Sent immediately
             } else if (status === 'REVIEWED') {
-                s1 = 'completed'; s2 = 'active'; width = '38%';
-            } else if (status === 'INTERVIEW') {
                 s1 = 'completed'; s2 = 'completed'; s3 = 'active'; width = '62%';
+            } else if (status === 'SHORTLISTED' || status === 'INTERVIEW') {
+                s1 = 'completed'; s2 = 'completed'; s3 = 'completed'; s4 = 'active'; width = '88%';
             } else if (status === 'OFFERED' || status === 'HIRED') {
                 s1 = 'completed'; s2 = 'completed'; s3 = 'completed'; s4 = 'completed'; width = '100%';
             } else if (status === 'REJECTED' || status === 'WITHDRAWN') {
-                // For rejected, we might show full progress but different color, or just stop.
-                // For now, let's show applied as completed.
                 s1 = 'completed'; width = '12%';
             }
 
@@ -85,7 +87,7 @@
                     </div>
                     <div class="status-step ${s2}">
                         <div class="dot"></div>
-                        <div class="label">Application Sent</div>
+                        <div class="label">Sent</div>
                     </div>
                     <div class="status-step ${s3}">
                         <div class="dot"></div>

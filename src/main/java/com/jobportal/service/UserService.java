@@ -26,4 +26,17 @@ public interface UserService {
     List<User> getUsersByRole(String role);
 
     User findByPrincipal(java.security.Principal principal);
+
+    void createPasswordResetTokenForUser(User user, String token);
+
+    String validatePasswordResetToken(String token);
+
+    Optional<User> getUserByPasswordResetToken(String token);
+
+    void changeUserPassword(User user, String password);
+
+    // OTP Methods
+    String generateOTP(User user);
+
+    String validateOTP(String email, String otp);
 }

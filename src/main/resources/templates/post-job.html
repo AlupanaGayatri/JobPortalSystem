@@ -1,94 +1,126 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/recruiter-layout}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Job - Job Portal</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Global CSS -->
-    <link rel="stylesheet" th:href="@{/css/global.css}">
-    <!-- Page CSS -->
-    <link rel="stylesheet" th:href="@{/css/recruiter.css}">
+    <title>Post a Job</title>
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">
-                <i class="fas fa-briefcase"></i>
-                JobPortal
-            </a>
-            <div class="nav-links">
-                <a href="/dashboard">Dashboard</a>
-                <a href="/jobs">Browse Jobs</a>
-                <div class="user-menu">
-                    <span th:text="${user.fullName}">User Name</span>
-                    <form th:action="@{/logout}" method="post" style="display: inline;">
-                        <button type="submit" class="btn-logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+    <div layout:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="text-cream">Post a New Job</h1>
+            <p class="text-truffle">Reach thousands of candidates by posting your vacancy</p>
         </div>
-    </nav>
 
-    <div class="post-job-container">
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${success}">Job posted successfully!</span>
+        </div>
+
         <div class="form-card">
-            <div class="page-header">
-                <h1>Post a New Job</h1>
-                <p>Find the perfect candidate for your company</p>
-            </div>
-
-            <div th:if="${success}" class="alert alert-success">
-                <i class="fas fa-check-circle"></i>
-                Job posted successfully!
-            </div>
-
             <form th:action="@{/post-job}" method="post" th:object="${job}">
-                <div class="form-group">
-                    <label for="title">Job Title *</label>
-                    <input type="text" id="title" name="title" class="form-control" required
-                        placeholder="e.g. Senior Java Developer">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="title" class="text-gold mb-1">Job Title</label>
+                            <input type="text" id="title" th:field="*{title}" class="form-control text-light"
+                                placeholder="e.g. Senior Software Engineer" required
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="companyName" class="text-gold mb-1">Company Name</label>
+                            <input type="text" id="companyName" th:field="*{companyName}"
+                                class="form-control text-light" placeholder="e.g. TechCorp" required
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="location" class="text-gold mb-1">Location</label>
+                            <input type="text" id="location" th:field="*{location}" class="form-control text-light"
+                                placeholder="e.g. Remote, New York, NY" required
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="jobType" class="text-gold mb-1">Job Type</label>
+                            <select id="jobType" th:field="*{jobType}" class="form-select text-light"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                                <option value="Full Time">Full Time</option>
+                                <option value="Part Time">Part Time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Internship">Internship</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="experienceLevel" class="text-gold mb-1">Experience Level</label>
+                            <select id="experienceLevel" th:field="*{experienceLevel}" class="form-select text-light"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                                <option value="Entry Level">Entry Level</option>
+                                <option value="Mid Level">Mid Level</option>
+                                <option value="Senior Level">Senior Level</option>
+                                <option value="Lead">Lead</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="minSalary" class="text-gold mb-1">Min Salary</label>
+                            <input type="number" id="minSalary" th:field="*{minSalary}" class="form-control text-light"
+                                placeholder="e.g. 50000"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="maxSalary" class="text-gold mb-1">Max Salary</label>
+                            <input type="number" id="maxSalary" th:field="*{maxSalary}" class="form-control text-light"
+                                placeholder="e.g. 80000"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
+
+
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="description" class="text-gold mb-1">Job Description</label>
+                            <textarea id="description" th:field="*{description}" class="form-control text-light"
+                                rows="10" placeholder="Describe the role responsibilities and requirements..." required
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-4">
+                            <label for="skillsRequired" class="text-gold mb-1">Skills Required</label>
+                            <input type="text" id="skillsRequired" th:field="*{skillsRequired}"
+                                class="form-control text-light"
+                                placeholder="e.g. Java, Spring Boot, React (comma separated)"
+                                style="background-color: var(--choco-dark); border-color: var(--choco-light);">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="company">Company Name *</label>
-                    <input type="text" id="company" name="company" class="form-control" required
-                        placeholder="e.g. Tech Solutions Inc.">
+                <div class="d-flex justify-content-end gap-3">
+                    <a href="/recruiter/dashboard" class="btn btn-outline-light">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-5">
+                        Publish Job
+                    </button>
                 </div>
-
-                <div class="form-group">
-                    <label for="location">Location *</label>
-                    <input type="text" id="location" name="location" class="form-control" required
-                        placeholder="e.g. Remote, New York, London">
-                </div>
-
-                <div class="form-group">
-                    <label for="salary">Salary Range</label>
-                    <input type="text" id="salary" name="salary" class="form-control"
-                        placeholder="e.g. $80,000 - $120,000">
-                </div>
-
-                <div class="form-group">
-                    <label for="description">Job Description *</label>
-                    <textarea id="description" name="description" class="form-control" required
-                        placeholder="Describe the role, responsibilities, and requirements..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-paper-plane"></i> Post Job
-                </button>
             </form>
         </div>
     </div>
-    </div>
-    <script th:src="@{/js/theme.js}"></script>
 </body>
 
 </html>

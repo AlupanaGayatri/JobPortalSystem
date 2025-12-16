@@ -67,4 +67,15 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
      */
     @Query("SELECT COUNT(ja) FROM JobApplication ja WHERE ja.job.recruiterId = :recruiterId")
     long countByJobRecruiterId(@Param("recruiterId") Long recruiterId);
+
+    /**
+     * Delete all applications for a job
+     */
+    void deleteByJobId(Long jobId);
+
+    /**
+     * Find all applications for jobs posted by a specific recruiter
+     */
+    @Query("SELECT ja FROM JobApplication ja WHERE ja.job.recruiterId = :recruiterId")
+    java.util.List<JobApplication> findByJobRecruiterId(@Param("recruiterId") Long recruiterId);
 }

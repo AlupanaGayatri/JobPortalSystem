@@ -39,10 +39,28 @@
         <a href="/logout" class="logout">
             <i class="fas fa-sign-out-alt icon"></i> Logout
         </a>
+
+        <div class="sidebar-footer"
+            style="margin-top: auto; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; align-items: center; gap: 10px; color: #fff;">
+                <div
+                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                    <span th:text="${#strings.substring(user.fullName,0,1)}">U</span>
+                </div>
+                <div>
+                    <div th:text="${user.fullName}" style="font-weight: 600; font-size: 14px;">User Name</div>
+                    <div style="font-size: 11px; opacity: 0.7;">Job Seeker</div>
+                </div>
+            </div>
+        </div>
     </aside>
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Mobile Toggle Button -->
+        <button id="mobileSidebarToggle" class="mobile-toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
         <div class="page-header">
             <h2><i class="fas fa-user-edit"></i> Profile Setup</h2>
             <p>Complete your professional profile to stand out to employers</p>
@@ -465,6 +483,7 @@
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script th:src="@{/js/theme.js}"></script>
+    <script th:src="@{/js/mobile-toggle.js}"></script>
 </body>
 
 </html>

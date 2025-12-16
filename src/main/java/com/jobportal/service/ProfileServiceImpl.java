@@ -24,4 +24,9 @@ public class ProfileServiceImpl implements ProfileService {
         Optional<Profile> opt = profileRepository.findByUserId(userId);
         return opt.orElse(null);
     }
+
+    @Override
+    public java.util.List<Profile> getAllProfiles() {
+        return profileRepository.findAll();
+    }
 }

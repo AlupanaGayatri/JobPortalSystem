@@ -25,4 +25,10 @@ public interface JobApplicationService {
     void deleteApplication(Long id);
 
     void deleteAllApplications(Long userId);
+
+    long countApplicationsByRecruiter(Long recruiterId);
+
+    List<JobApplication> getApplicationsByRecruiter(Long recruiterId);
+
+    void updateStatus(Long applicationId, String status);
 }

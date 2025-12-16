@@ -26,6 +26,7 @@ public class ExperienceController {
         User user = userService.findByPrincipal(principal);
         model.addAttribute("experienceList", expService.getByUser(user));
         model.addAttribute("experience", new Experience()); // Add empty object for form
+        model.addAttribute("user", user);
         return "experience";
     }
 

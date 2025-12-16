@@ -6,7 +6,7 @@
 const ThemeManager = {
     // Available themes
     themes: {
-        'default': 'Chocolate Truffle',
+        'default': 'Old Photograph',
         'ocean': 'Ocean Breeze',
         'sunset': 'Sunset Gold',
         'midnight': 'Midnight Violet',

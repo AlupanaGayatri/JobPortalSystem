@@ -26,6 +26,7 @@ public class EducationController {
         User user = userService.findByPrincipal(principal);
         model.addAttribute("educationList", eduService.getByUser(user));
         model.addAttribute("education", new Education()); // Add empty object for form
+        model.addAttribute("user", user);
         return "education";
     }
 
